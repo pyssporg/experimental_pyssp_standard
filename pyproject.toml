@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyssp-standard"
-version = "0.8.2"
+version = "0.9.2.dev0"
 description = "Simple python package for reading, modifying and creating files, specified in the SSP Standard"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -35,7 +35,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pyssporg/pyssp_standard"
+Homepage = "https://github.com/pyssporg/experimental_pyssp_standard"
 
 [tool.setuptools.packages.find]
 include = [
