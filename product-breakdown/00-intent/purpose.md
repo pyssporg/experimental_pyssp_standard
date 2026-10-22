@@ -35,6 +35,10 @@ XML parsing from domain logic.
 3. **Resolve cross-document references** in archive-aware workflows.
 4. **Stay layered** — archive, codec, model, validation, orchestration, and
    public API each own one concern.
+5. **Keep the border standard, or public.** The interchange format is the SSP
+   artifact; when a consumer needs an object, it receives a documented public
+   facade (`SSP`, `SSD`, `SSV`, `SSM`, `FMU`, `ModelDescription`, and their
+   model types). Internal codecs and schema bindings do not cross.
 
 ## Non-Goals (Current)
 

@@ -70,6 +70,13 @@ Rules:
 
 ## Cross-Cutting Design Rules
 
+### Library Boundary
+- The preferred border is the SSP/FMI artifact itself.
+- When a Python object must cross, expose only a documented public facade or
+  model type from the package public surface.
+- Internal codecs, schema bindings, and archive helpers stay internal unless a
+  deliberate public API decision promotes them.
+
 ### Versioning
 - Detect `(format, family, version)` once, route to the correct stack early
 - Avoid scattered version checks in higher-level workflows

@@ -10,8 +10,15 @@ The current public entry points are:
 - `SRMD` for simulation resource meta data (compute resources, tool versions, licenses)
 - `SSB` for signal dictionaries
 - `FMU` and `ModelDescription` for FMI model archives and `modelDescription.xml`
+- `LSRefExperiments`, `LSRefExperiment`, and `LSRefExperimentResource` for LS-REF experiments
+- `package_archive` and `unpack_archive` for deterministic SSP/FMU archive I/O
 
 The package is aimed at pre-processing, inspection, and controlled edits of SSP artifacts.
+
+**Library boundary:** the preferred interchange is the SSP/FMI artifact itself.
+When a Python object must cross, use only the public entry points and model
+types listed above; internal codecs, schema bindings, and archive helpers are
+not part of the public API.
 
 ## Install
 
@@ -56,4 +63,5 @@ with SSP("system.ssp", mode="r") as ssp:
 - Use `SSD(path)` for file-local SSD work.
 - Use `SSP(path).system_structure()` when edits need archive-aware resolution of external `.ssv` and `.ssm` references.
 - For SSD structure edits, prefer `ssd.xml.system` as the canonical model entry point.
+- Use `SSD.flatten()` for the public flatten operation; do not import the SSP1 codec or operation modules directly.
 - Legacy and unsupported material is kept outside the main docs flow and should not be treated as the primary API surface.

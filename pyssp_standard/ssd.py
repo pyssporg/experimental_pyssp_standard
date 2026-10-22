@@ -11,12 +11,14 @@ from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1Connector,
     Ssd1DefaultExperiment,
     Ssd1ParameterBinding,
+    Ssd1ParameterMappingReference,
     Ssd1SystemStructureDescription,
     Ssd1System,
 )
 from pyssp_standard.common.xml_document import XmlDocument
 
 from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1DocumentMetadata
+from pyssp_standard.standard.ssp1.model.ssm_model import Ssp1ParameterMapping
 from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
 
 
@@ -26,6 +28,8 @@ DefaultExperiment = Ssd1DefaultExperiment
 Component = Ssd1Component
 Connector = Ssd1Connector
 ParameterBinding = Ssd1ParameterBinding
+ParameterMappingReference = Ssd1ParameterMappingReference
+ParameterMapping = Ssp1ParameterMapping
 
 
 class SSD(XmlDocument[Ssd1SystemStructureDescription]):
@@ -90,6 +94,15 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
             version=version,
             metadata=metadata,
         )
+
+    def flatten(self) -> None:
+        """Flatten nested systems into one system in place."""
+        from pyssp_standard.standard.ssp1.codec.ssd_codec import Ssp1SsdCodec
+        from pyssp_standard.standard.ssp1.operations.ssd_flatten import flatten_ssd
+
+        flattened = flatten_ssd(self.xml)
+        flattened.version = "1.0"
+        self.from_xml(Ssp1SsdCodec().serialize(flattened))
 
 
 

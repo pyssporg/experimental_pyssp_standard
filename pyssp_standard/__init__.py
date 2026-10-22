@@ -1,12 +1,21 @@
 from pathlib import Path
 
+from pyssp_standard.common.archive import (
+    copy_resource_directory,
+    package_archive,
+    unpack_archive,
+)
 from pyssp_standard.fmu import FMU
 from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import FmuEntry
 from pyssp_standard.md import ModelDescription
 from pyssp_standard.ls_ref import LSRefExperiments, LSRefManifest, LS_REF_EXTRA_DIR
+from pyssp_standard.standard.ls_ref.model import (
+    LSRefExperiment,
+    LSRefExperimentResource,
+)
 from pyssp_standard.srmd import SRMD
 from pyssp_standard.ssb import SSB
-from pyssp_standard.ssd import SSD
+from pyssp_standard.ssd import ParameterMapping, ParameterMappingReference, SSD
 from pyssp_standard.ssm import SSM
 from pyssp_standard.ssp import SSP
 from pyssp_standard.ssv import SSV
@@ -24,9 +33,13 @@ def get_repo_root(*, file: str = "__SSP_REF_ROOT__") -> Path:
 __all__ = [
     "FMU",
     "FmuEntry",
+    "LSRefExperiment",
+    "LSRefExperimentResource",
     "LSRefExperiments",
     "LSRefManifest",
     "ModelDescription",
+    "ParameterMapping",
+    "ParameterMappingReference",
     "SRMD",
     "SSB",
     "SSD",
@@ -34,5 +47,8 @@ __all__ = [
     "SSP",
     "SSV",
     "get_repo_root",
-    "LS_REF_EXTRA_DIR"
+    "LS_REF_EXTRA_DIR",
+    "copy_resource_directory",
+    "package_archive",
+    "unpack_archive",
 ]

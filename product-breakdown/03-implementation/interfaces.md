@@ -9,11 +9,17 @@ All public exports from `pyssp_standard/__init__.py`:
 
 ```python
 __all__ = [
-    "FMU", "LSRefExperiments", "LSRefExperimentsRuntime",
-    "LSRefManifest", "ModelDescription", "SRMD", "SSB", "SSD",
-    "SSM", "SSP", "SSV", "get_repo_root", "LS_REF_EXTRA_DIR",
+    "FMU", "FmuEntry", "LSRefExperiment", "LSRefExperimentResource",
+    "LSRefExperiments", "LSRefManifest", "ModelDescription",
+    "ParameterMapping", "ParameterMappingReference",
+    "SRMD", "SSB", "SSD", "SSM", "SSP", "SSV",
+    "get_repo_root", "LS_REF_EXTRA_DIR",
+    "copy_resource_directory", "package_archive", "unpack_archive",
 ]
 ```
+
+`SSD.flatten()` is the public facade for replacing nested systems with one
+flattened system; callers do not import the SSP1 codec or flatten operation.
 
 ## Facade Interface Pattern
 
