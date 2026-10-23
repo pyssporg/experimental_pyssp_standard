@@ -89,6 +89,11 @@ def iter_fmu_entries(
         if not isinstance(element, Ssd1Component):
             continue
 
+        if not element.source:
+            # A design-first SSP leaves unpopulated components with no source;
+            # they carry no FMU to iterate.
+            continue
+
         resolved = runtime.resolve(element.source)
         if skip_missing and not resolved.exists():
             continue
