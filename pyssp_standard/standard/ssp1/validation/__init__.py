@@ -15,6 +15,9 @@ from pyssp_standard.standard.ssp1.validation.ssd_validation import (
     Ssp1SsdSemanticValidator,
     Ssp1SsdValidator,
 )
+from pyssp_standard.standard.ssp1.validation.ssd_fmu_validation import (
+    validate_component_fmu,
+)
 from pyssp_standard.standard.ssp1.validation.ssm_validation import (
     Ssp1SsmSchemaValidator,
     Ssp1SsmSemanticValidator,
@@ -42,4 +45,5 @@ __all__ = [
     "Ssp1SsvSchemaValidator",
     "Ssp1SsvSemanticValidator",
     "Ssp1SsvValidator",
+    "validate_component_fmu",
 ]

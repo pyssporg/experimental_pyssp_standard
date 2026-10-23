@@ -35,12 +35,13 @@ pyssp_standard/
 │   ├── common/              #   Shared standard helpers
 │   │   └── utils.py
 │   ├── operations/          #   Cross-standard composition
+│   │   ├── fmi_interfaces.py
 │   │   └── model_description_to_ssd.py
 │   ├── ssp1/                #   [ACTIVE] Full SSP1
 │   │   ├── codec/           #     6 codec modules
 │   │   ├── model/           #     7 model modules
 │   │   ├── operations/      #     3 operation modules
-│   │   └── validation/      #     6 validation modules
+│   │   └── validation/      #     7 validation modules
 │   ├── ssp2/                #   [SKELETON] Empty
 │   │   ├── codec/ (empty)
 │   │   ├── model/ (empty)

@@ -113,6 +113,26 @@ with SSP("system.ssp", mode="a") as ssp:
 
 When you open `SystemStructure.ssd` through `SSP`, external parameter bindings and mappings can be resolved and written back in the same session.
 
+### Populating a design-first SSP
+
+`add_fmu()` creates a component. When the composition already exists — for
+example because it was exported from SysML before the FMUs were built —
+`attach_fmu()` pairs an FMU with an existing component instead.
+
+```python
+from pyssp_standard import SSP
+
+with SSP("design.ssp", mode="a") as ssp:
+    ssp.attach_fmu("source", "build/CsvSource.fmu")
+    ssp.validate_fmu_interfaces()
+```
+
+`attach_fmu()` copies the FMU into `resources/`, points the component's
+`source` at it, and by default checks that the component's connector names,
+connector kinds, and implementation match the FMU. `validate_fmu_interfaces()`
+runs the same check for every component whose resource is present; components
+without a resource are skipped.
+
 ## FMU
 
 Use `FMU` for `.fmu` archives or unpacked FMU directories.
@@ -145,6 +165,9 @@ with FMU("controller.fmu", mode="w") as fmu:
 ```
 
 ## ModelDescription
+
+`md.interface_types` returns the FMI interfaces the model description offers
+(`ModelExchange`, `CoSimulation`, `ScheduledExecution`), across FMI 2 and 3.
 
 Use `ModelDescription` when you already have a direct path to `modelDescription.xml` and do not need FMU archive handling.
 

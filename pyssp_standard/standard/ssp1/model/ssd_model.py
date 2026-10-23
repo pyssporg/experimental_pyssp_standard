@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable, Mapping
+from typing import Iterable, Iterator, Mapping
 
 from pyssp_standard.standard.ssp1.model.ssc_model import (
     Ssp1Annotation,
@@ -111,6 +111,46 @@ class Ssd1System:
     def get_subsystems(self) -> list[Ssd1System]:
         """Return only nested Ssd1System children."""
         return [e for e in self.elements if isinstance(e, Ssd1System)]
+
+    def iter_components(self, *, recursive: bool = False) -> Iterator[Ssd1Component]:
+        """Yield component children, optionally descending into nested systems."""
+        for element in self.elements:
+            if isinstance(element, Ssd1System):
+                if recursive:
+                    yield from element.iter_components(recursive=True)
+            else:
+                yield element
+
+    def find_component(self, name: str) -> Ssd1Component:
+        """Return the unique component called *name* at any depth.
+
+        Raises:
+            ValueError: When no component matches or several do.
+        """
+        matches = [
+            (path, component)
+            for path, component in self._walk_components(())
+            if component.name == name
+        ]
+        if not matches:
+            raise ValueError(f"No component named '{name}'")
+        if len(matches) > 1:
+            qualified = ", ".join(
+                ".".join((*path, component.name)) for path, component in matches
+            )
+            raise ValueError(
+                f"Component name '{name}' is ambiguous; matches: {qualified}"
+            )
+        return matches[0][1]
+
+    def _walk_components(
+        self, prefix: tuple[str, ...]
+    ) -> Iterator[tuple[tuple[str, ...], Ssd1Component]]:
+        for element in self.elements:
+            if isinstance(element, Ssd1System):
+                yield from element._walk_components((*prefix, element.name))
+            else:
+                yield prefix, element
 
     def add_connection(self, connection: Ssd1Connection) -> Ssd1Connection:
         self.connections.append(connection)

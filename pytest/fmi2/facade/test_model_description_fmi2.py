@@ -277,3 +277,15 @@ def test_strip_model_exchange_fails_when_not_loaded():
     md = ModelDescription("model_description.xml")
     with pytest.raises(RuntimeError, match="not loaded"):
         md.strip_model_exchange()
+
+
+def test_interface_types_reports_model_exchange():
+    with ModelDescription("model_description.xml") as md:
+        md.from_xml(_ME_XML)
+        assert md.interface_types == {"ModelExchange"}
+
+
+def test_interface_types_reports_cosimulation():
+    with ModelDescription("model_description.xml") as md:
+        md.from_xml(_CS_XML)
+        assert md.interface_types == {"CoSimulation"}

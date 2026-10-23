@@ -11,6 +11,9 @@ from pyssp_standard.standard.fmi3.model import (
     Fmi3ModelDescriptionDocument,
     Fmi3ScalarVariable,
 )
+from pyssp_standard.standard.operations.fmi_interfaces import (
+    interface_types as _interface_types,
+)
 from pyssp_standard.standard.version_routing import (
     StandardVersion,
     get_codec_and_validator,
@@ -53,6 +56,11 @@ class ModelDescription(XmlDocument[Fmi2ModelDescriptionDocument | Fmi3ModelDescr
             guid="",
             interface_type="CoSimulation",
         )
+
+    @property
+    def interface_types(self) -> set[str]:
+        """FMI interface types this model description offers."""
+        return _interface_types(self.xml)
 
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.
