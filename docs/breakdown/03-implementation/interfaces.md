@@ -90,10 +90,9 @@ stored verbatim for consumers. A resource name holding different bytes raises
 `FileExistsError`; a read-mode session raises `RuntimeError`.
 
 Assembly lives in `standard/ssp1/operations/ssp_binding.py`; the facade only
-delegates. `SSP.add_external_parameterset()` is the compatibility entry point
-and delegates to the same implementation. `SSD.extend_system_parameterset` and
-`SSD.extend_component_parameterset` remain low-level helpers that extend an
-existing inline set.
+delegates. Extending an existing inline set is the element's job:
+`system.extend_inline_parameterset()` and
+`component.extend_inline_parameterset()`.
 
 ## Facade Interface Pattern
 

@@ -26,7 +26,7 @@ status: current
 | CAP-010 | Signal dictionary (SSB) | Read, create, edit, validate `.ssb` signal dictionaries | `ssb.py`, `standard/ssp1/codec/ssb_codec.py` |
 | CAP-011 | Simulation resource metadata (SRMD) | Read, create, edit, validate `.srmd` resource metadata | `srmd.py`, `standard/ssp1/codec/srmd_codec.py` |
 | CAP-012 | LS-REF manifest/experiments | Read/create/edit/validate LS-REF manifest and experiments documents | `ls_ref.py`, `standard/ls_ref/codec/` |
-| CAP-013 | Archive-aware parameter binding | Add external or inline parameter sets and mappings to SSP system structures | `ssp.py` (`bind_parameters()`, `add_external_parameterset()`), `standard/ssp1/operations/ssp_binding.py` |
+| CAP-013 | Archive-aware parameter binding | Add external or inline parameter sets and mappings to SSP system structures | `ssp.py` (`bind_parameters()`), `standard/ssp1/operations/ssp_binding.py` |
 | CAP-016 | Scenario parameter resolution | Read typed SSV parameters and resolve SSM mappings to target-keyed parameters | `ssv.py`, `ssm.py`, `parameters.py` |
 
 ## Future Capabilities (registered but not implemented)

@@ -361,30 +361,13 @@ def test_ssv_name_returns_document_name(tmp_path):
         assert ssv.xml.name == "named_set"
 
 
-def test_add_external_parameterset_delegates_to_binding(tmp_path):
+def test_bind_parameters_renames_the_external_resource(tmp_path):
     root = _new_ssp(tmp_path / "ssp")
     ssv_path = _write_ssv(tmp_path / "scenario.ssv")
 
     with SSP(root, mode="a") as ssp:
-        binding = ssp.add_external_parameterset(ssv_path, resource_name="custom.ssv")
+        binding = ssp.bind_parameters(ssv_path, name="custom.ssv")
         assert binding.source == "resources/custom.ssv"
 
     with _opened(root) as (_, ssd):
         assert _root_binding(ssd).source == "resources/custom.ssv"
-
-
-def test_add_external_parameterset_keeps_mapping_resource_name(tmp_path):
-    root = _new_ssp(tmp_path / "ssp")
-    ssv_path = _write_ssv(tmp_path / "scenario.ssv")
-    ssm_path = _write_ssm(tmp_path / "mapping.ssm", (("height", "plant.height"),))
-
-    with SSP(root, mode="a") as ssp:
-        binding = ssp.add_external_parameterset(
-            ssv_path,
-            ssm_path,
-            mapping_resource_name="custom.ssm",
-        )
-        assert binding.parameter_mapping.source == "resources/custom.ssm"
-
-    assert (root / "resources" / "custom.ssm").is_file()
-    assert not (root / "resources" / "mapping.ssm").exists()

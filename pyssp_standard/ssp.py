@@ -122,44 +122,6 @@ class SSP:
             prefix=prefix,
         )
 
-    def add_external_parameterset(
-        self,
-        parameter_set_path: str | Path,
-        mapping_path: str | Path | None = None,
-        *,
-        resource_name: str | None = None,
-        mapping_resource_name: str | None = None,
-        prefix: str | None = None,
-    ) -> ParameterBinding:
-        """Add an external parameter set, and optionally a mapping, to the root.
-
-        Compatibility entry point: ``resource_name`` maps to ``name`` and
-        ``mapping_resource_name`` stages the mapping under that resource name
-        before delegating to :meth:`bind_parameters`.
-
-        Raises:
-            FileNotFoundError: If a given path does not exist.
-            FileExistsError: When a resource name holds different bytes.
-        """
-        with self.system_structure() as ssd:
-            if ssd.system is None:
-                ssd.new_system(ssd.xml.name or "system")
-
-        if mapping_path is not None and mapping_resource_name is not None:
-            mapping_path = self.runtime.resolve(
-                self.runtime.add_file(
-                    Path(mapping_path),
-                    target_name=f"resources/{mapping_resource_name}",
-                )
-            )
-
-        return self.bind_parameters(
-            parameter_set_path,
-            mapping=mapping_path,
-            name=resource_name,
-            prefix=prefix,
-        )
-
     def remove_resource(self, resource_name: str) -> None:
         self.runtime.remove_file(f"resources/{resource_name}")
 

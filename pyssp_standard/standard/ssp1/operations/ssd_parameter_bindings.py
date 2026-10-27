@@ -23,7 +23,7 @@ def extend_inline_parameter_binding(
     Low-level helper: it extends an existing inline binding rather than adding
     a new one. ``SSP.bind_parameters`` is the assembly entry point.
     """
-    parameter_set = get_or_create_inlined_parameter_set(
+    parameter_set = _get_or_create_inlined_parameter_set(
         bindings,
         binding_name=binding_name or default_name,
         prefix=prefix,
@@ -41,7 +41,7 @@ def extend_inline_parameter_binding(
     return binding
 
 
-def get_or_create_inlined_parameter_set(
+def _get_or_create_inlined_parameter_set(
     bindings: list[Ssd1ParameterBinding],
     binding_name: str | None = None,
     prefix: str | None = None,
@@ -73,26 +73,3 @@ def get_or_create_inlined_parameter_set(
         binding.prefix = prefix
 
     return binding.parameter_set
-
-
-def add_external_parameterset(
-    bindings: list[Ssd1ParameterBinding],
-    source: str,
-    *,
-    mapping_source: str | None = None,
-    prefix: str | None = None,
-) -> Ssd1ParameterBinding:
-    """Append an external parameter binding that references *source*.
-
-    Low-level helper: it only records the reference; placing the resource and
-    resolving the target belong to ``SSP.bind_parameters``.
-    """
-    binding = Ssd1ParameterBinding(
-        source=source,
-        prefix=prefix,
-        parameter_mapping=(
-            Ssd1ParameterMappingReference(source=mapping_source) if mapping_source is not None else None
-        ),
-    )
-    bindings.append(binding)
-    return binding

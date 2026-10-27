@@ -2,11 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
-from typing import Iterable, Mapping
 
-from pyssp_standard.parameters import Parameter
 from pyssp_standard.tree import DefaultExperiment, System
-from pyssp_standard.standard.ssp1.operations.ssd_parameters import extend_component_parametersets
 from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1DefaultExperiment,
     Ssd1SystemStructureDescription,
@@ -62,26 +59,6 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
             stop_time=stop_time,
         )
 
-    def extend_component_parameterset(
-        self,
-        parameters_by_component: Mapping[
-            str,
-            Mapping[str, object] | Iterable[Parameter | tuple[str, object]],
-        ],
-    ) -> None:
-        """Extend inline parameter sets for components by component name.
-
-        Low-level helper: it extends existing inline sets rather than adding new
-        bindings. ``SSP.bind_parameters`` is the assembly entry point.
-
-        Example:
-            ssd.extend_component_parameterset({
-                "controller": {"gain": 2.0, "enabled": True},
-                "plant": [("offset", -1.0)],
-            })
-        """
-        extend_component_parametersets(self.xml, parameters_by_component)
-
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.
 
@@ -92,41 +69,6 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
         from pyssp_standard.common.datetime_utils import format_generation_datetime
 
         self.xml.metadata.generation_date_and_time = format_generation_datetime(dt)
-
-    def extend_system_parameterset(
-        self,
-        parameters: Mapping[str, object] | Iterable[Parameter | tuple[str, object]],
-        *,
-        binding_name: str | None = None,
-        prefix: str | None = None,
-        version: str = "1.0",
-        mapping_source: str | None = None,
-    ) -> None:
-        """Extend the top-level system's inline parameter set.
-
-        Low-level helper: it extends the existing inline set rather than adding
-        a new binding. ``SSP.bind_parameters`` is the assembly entry point.
-
-        Args:
-            parameters: Parameter values, either a mapping of names to values or
-                an iterable of ``Parameter`` objects and ``(name, value)``
-                tuples.
-            binding_name: Name of the inline parameter set; defaults to
-                ``"<system name>_parameters"``.
-            prefix: Optional prefix applied to the parameter binding.
-            version: SSP version stored on a newly created parameter set.
-            mapping_source: Optional ``.ssm`` reference attached to the binding
-                as its parameter mapping; an existing reference is replaced.
-        """
-        if self.xml.system is None:
-            raise RuntimeError("Cannot extend a parameter set without a system")
-        self.xml.system.extend_inline_parameterset(
-            parameters,
-            binding_name=binding_name,
-            prefix=prefix,
-            version=version,
-            mapping_source=mapping_source,
-        )
 
     def flatten(self) -> None:
         """Flatten nested systems into one system in place."""

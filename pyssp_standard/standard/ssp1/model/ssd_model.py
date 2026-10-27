@@ -331,24 +331,6 @@ class Ssd1System:
             mapping_source=mapping_source,
         )
 
-    def add_external_parameterset(
-        self,
-        source: str,
-        *,
-        mapping_source: str | None = None,
-        prefix: str | None = None,
-    ) -> "Ssd1ParameterBinding":
-        from pyssp_standard.standard.ssp1.operations.ssd_parameter_bindings import (
-            add_external_parameterset,
-        )
-
-        return add_external_parameterset(
-            self.parameter_bindings,
-            source=source,
-            mapping_source=mapping_source,
-            prefix=prefix,
-        )
-
 
 @dataclass
 class Ssd1SystemStructureDescription:

@@ -169,20 +169,16 @@ def test_component_can_extend_first_inline_parameterset_from_mapping(tmp_path):
         ]
 
 
-def test_ssd_can_extend_component_inline_parametersets_by_name(tmp_path):
+def test_components_can_extend_their_inline_parametersets(tmp_path):
     path = tmp_path / "facade_parameters.ssd"
 
     with SSD(path, mode="w") as ssd:
         system = ssd.new_system("system")
-        system.add_component("step", source="resources/step.fmu")
-        system.add_component("gain", source="resources/gain.fmu")
+        step = system.add_component("step", source="resources/step.fmu")
+        gain = system.add_component("gain", source="resources/gain.fmu")
 
-        ssd.extend_component_parameterset(
-            {
-                "step": {"height": 2.0, "offset": 1.0},
-                "gain": {"k": 3.0},
-            }
-        )
+        step.extend_inline_parameterset({"height": 2.0, "offset": 1.0})
+        gain.extend_inline_parameterset({"k": 3.0})
 
     with SSD(path, mode="r") as ssd:
         step = next(element for element in ssd.system.elements if element.name == "step")
@@ -205,14 +201,14 @@ def test_ssd_can_extend_system_inline_parameterset(tmp_path):
     with SSD(path, mode="w") as ssd:
         ssd.new_system("system")
 
-        ssd.extend_system_parameterset(
+        ssd.system.extend_inline_parameterset(
             {
                 "step.height": 2.0,
                 "gain.k": 3.0,
             },
             binding_name="simulation_parameters",
         )
-        ssd.extend_system_parameterset({"step.offset": -1.0})
+        ssd.system.extend_inline_parameterset({"step.offset": -1.0})
 
     with SSD(path, mode="r") as ssd:
         assert ssd.system is not None
@@ -228,18 +224,22 @@ def test_ssd_can_extend_system_inline_parameterset(tmp_path):
         ]
 
 
-def test_extend_system_parameterset_attaches_and_overwrites_mapping_source(tmp_path):
+def test_extend_inline_parameterset_attaches_and_overwrites_mapping_source(tmp_path):
     path = tmp_path / "mapping_source.ssd"
 
     with SSD(path, mode="w") as ssd:
         ssd.new_system("system")
 
-        ssd.extend_system_parameterset({"step.height": 2.0}, mapping_source="resources/x.ssm")
+        ssd.system.extend_inline_parameterset(
+            {"step.height": 2.0}, mapping_source="resources/x.ssm"
+        )
         binding = ssd.system.get_parameter_bindings()[0]
         assert binding.parameter_mapping is not None
         assert binding.parameter_mapping.source == "resources/x.ssm"
 
-        ssd.extend_system_parameterset({"step.offset": -1.0}, mapping_source="resources/y.ssm")
+        ssd.system.extend_inline_parameterset(
+            {"step.offset": -1.0}, mapping_source="resources/y.ssm"
+        )
         assert binding.parameter_mapping.source == "resources/y.ssm"
 
     with SSD(path, mode="r") as ssd:
