@@ -1,5 +1,10 @@
 # pyssp_standard
 
+> **Experimental (alpha).** This package is under active development.
+> Breaking API changes can and will happen, including in the public entry points
+> and model types listed below. Pin a version and expect to update your code when
+> you upgrade.
+
 `pyssp_standard` is a Python package for inspecting and editing SSP-related files.
 
 The current public entry points are:

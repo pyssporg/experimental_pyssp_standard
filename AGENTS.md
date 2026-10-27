@@ -63,8 +63,14 @@ a full authoring environment or a simulation runtime.
 
 This is experimental software:
 
-- Interfaces do not need to be stable; prioritize clarity and ease of use.
-- Avoid thin shims or wrappers; change the references directly.
+- Interfaces do not need to be stable. **Breaking API changes can and will
+  happen**, including to the public facades and model types, and a release may
+  break existing consumers without a deprecation cycle.
+- Prioritize clarity and ease of use over backward compatibility.
+- Avoid thin shims, deprecation shims, and wrappers; change the references
+  directly and update callers in the same change.
+- Do not add compatibility layers to protect consumers from an API break — fix
+  the consumer, not the surface.
 
 ## Conventions
 
