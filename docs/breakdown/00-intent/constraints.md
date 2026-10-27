@@ -15,7 +15,7 @@ status: current
 | ID | Constraint | Source | Impact |
 |----|-----------|--------|--------|
 | CON-001 | Python 3.x standard library only for XML parsing (`xml.etree.ElementTree`) | `02-architecture/quality-attributes.md`, all codec modules | No lxml or external XML dependency |
-| CON-005 | Must support SSP1 and FMI2 as active standards | `02-architecture/quality-attributes.md`, `docs/breakdown/index.md` | Active codec/model/validation layers |
+| CON-005 | Must support SSP1 and FMI2 as active standards | `02-architecture/quality-attributes.md`, `docs/breakdown/README.md` | Active codec/model/validation layers |
 | CON-008 | Round-trip preservation: element order, annotations, extensions | `04-verification/acceptance-criteria.md` | Codecs must preserve logical collection ordering |
 | CON-013 | Compliance check is explicit (`check_compliance()`) not automatic | `common/xml_document.py`, `04-verification/acceptance-criteria.md` | User must explicitly call .check_compliance() |
 | CON-014 | External references preserved even when not resolved | `common/xml_document.py` | `document_runtime.py` keeps source attributes |
