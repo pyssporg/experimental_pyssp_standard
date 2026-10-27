@@ -2,14 +2,29 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from pyssp_standard.tree import DefaultExperiment, System
 from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1DefaultExperiment,
     Ssd1SystemStructureDescription,
     Ssd1System,
 )
+from pyssp_standard.standard.ssp1.operations.ssd_binding import (
+    append_binding,
+    resolve_target,
+)
 from pyssp_standard.common.xml_document import XmlDocument
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from pyssp_standard.parameters import Parameter, ParameterMapping, ParameterSet
+    from pyssp_standard.tree import (
+        Component,
+        DefaultExperiment,
+        ParameterBinding,
+        System,
+    )
 
 
 class SSD(XmlDocument[Ssd1SystemStructureDescription]):
@@ -30,6 +45,64 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
     def system(self) -> System | None:
         """Top-level system, or ``None`` when the document has none."""
         return self.xml.system
+
+    def target(self, path: str | None = None) -> System | Component:
+        """Return the root system, or the element named by a dotted path.
+
+        Args:
+            path: ``None`` for the root system, otherwise dot-separated element
+                names whose last segment is a system or a component.
+
+        Raises:
+            ValueError: When the document has no system or a segment is empty.
+            KeyError: When a segment is unknown, ambiguous, or not a system.
+        """
+        return resolve_target(self.xml.system, path)
+
+    def bind_parameters(
+        self,
+        parameters: ParameterSet | Mapping[str, Parameter] | None = None,
+        *,
+        target: str | None = None,
+        source: str | None = None,
+        mapping: ParameterMapping | None = None,
+        mapping_source: str | None = None,
+        name: str | None = None,
+        prefix: str | None = None,
+    ) -> ParameterBinding:
+        """Add one parameter binding to a system or component.
+
+        Args:
+            parameters: A parameter set embedded as a deep copy, or parameters
+                keyed by name embedded as a new set named ``name or
+                "parameters"``. Required unless ``source`` is given.
+            target: Dotted path to the target element; ``None`` selects the root
+                system.
+            source: External resource reference, written verbatim. Mutually
+                exclusive with ``parameters`` and ``name``.
+            mapping: Parameter mapping to embed.
+            mapping_source: External mapping reference. Mutually exclusive with
+                ``mapping``.
+            name: Name for an embedded set.
+            prefix: Binding prefix, written verbatim.
+
+        Raises:
+            RuntimeError: When the document was opened read-only.
+            ValueError: On an invalid argument combination, a document without
+                a system, or an empty target segment.
+            KeyError: When a target segment is unknown or ambiguous.
+        """
+        if self.mode == "r":
+            raise RuntimeError("Cannot bind parameters in read mode")
+        return append_binding(
+            self.target(target),
+            parameters,
+            source=source,
+            mapping=mapping,
+            mapping_source=mapping_source,
+            name=name,
+            prefix=prefix,
+        )
 
     @property
     def default_experiment(self) -> DefaultExperiment | None:

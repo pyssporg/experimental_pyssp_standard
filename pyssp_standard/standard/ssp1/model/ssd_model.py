@@ -100,7 +100,7 @@ class Ssd1Component:
 
     def add_parameter_binding(
         self,
-        source: str,
+        source: str | None = None,
         *,
         prefix: str | None = None,
         parameter_set: Ssp1ParameterSet | None = None,
@@ -214,7 +214,7 @@ class Ssd1System:
 
     def add_parameter_binding(
         self,
-        source: str,
+        source: str | None = None,
         *,
         prefix: str | None = None,
         parameter_set: Ssp1ParameterSet | None = None,

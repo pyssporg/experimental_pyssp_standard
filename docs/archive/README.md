@@ -9,6 +9,11 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
 
 ## By Layer
 
+### Architecture
+
+- **IMD-006** — Split parameter binding between SSD and SSP · accepted · 2026-10-27 · `IMD-006`
+  SSD edits bindings and resolves targets; SSP places archive resources and delegates.
+
 ### Implementation
 
 - **DEC-001** — SSP FMU iteration API surface · accepted · 2026-05-26 · `DEC-001`

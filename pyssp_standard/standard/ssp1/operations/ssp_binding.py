@@ -1,9 +1,10 @@
-"""Assembly of parameter bindings inside an SSP session.
+"""Archive placement of parameter bindings inside an SSP session.
 
-Resolves the target element, places external resources, embeds in-memory
-documents, attaches or resolves the parameter mapping, and returns the created
-binding. The public facade (:meth:`pyssp_standard.ssp.SSP.bind_parameters`)
-delegates here; policy such as one-root-binding rules stays with the caller.
+Reads the ``.ssv``/``.ssm`` inputs, places external resources under
+``resources/``, then delegates the document edit to
+:meth:`pyssp_standard.ssd.SSD.bind_parameters`. The public facade
+(:meth:`pyssp_standard.ssp.SSP.bind_parameters`) delegates here; policy such as
+one-root-binding rules stays with the caller.
 """
 
 from __future__ import annotations
@@ -23,17 +24,12 @@ from pyssp_standard.parameters import (
 )
 from pyssp_standard.ssm import SSM
 from pyssp_standard.ssv import SSV
-from pyssp_standard.standard.ssp1.model.ssd_model import (
-    Ssd1ParameterBinding,
-    Ssd1ParameterMappingReference,
-    Ssd1System,
-)
 from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1ParameterSet
 from pyssp_standard.standard.version_routing import (
     StandardVersion,
     get_codec_and_validator,
 )
-from pyssp_standard.tree import Element, ParameterBinding
+from pyssp_standard.tree import ParameterBinding
 
 if TYPE_CHECKING:
     from pyssp_standard.ssp import SSP
@@ -94,8 +90,6 @@ def bind_parameters(
         parameter_path,
         needed=needs_document,
     )
-    if name is not None and document is not None:
-        document.name = name
     if resolve_mapping and mapping_document is not None:
         document = _resolved_document(document, mapping_document)
 
@@ -105,29 +99,27 @@ def bind_parameters(
     inline_mapping = mapping_document if not resolve_mapping else None
 
     if placement == "external":
+        if name is not None and document is not None:
+            document.name = name
         resource_name = _external_resource_name(name, parameter_path, document)
         if parameter_path is not None and not resolve_mapping:
             _copy_resource(ssp, parameter_path, f"resources/{resource_name}")
         else:
             _write_parameter_set(ssp, document, f"resources/{resource_name}")
         with ssp.system_structure() as ssd:
-            element = _select_target(ssd, target)
-            return _append_binding(
-                element,
+            return ssd.bind_parameters(
                 source=f"resources/{resource_name}",
-                parameter_set=None,
+                target=target,
                 prefix=prefix,
                 mapping=inline_mapping,
                 mapping_source=mapping_source,
             )
 
-    document = _require_document(document)
     with ssp.system_structure() as ssd:
-        element = _select_target(ssd, target)
-        return _append_binding(
-            element,
-            source=None,
-            parameter_set=document,
+        return ssd.bind_parameters(
+            _require_document(document),
+            target=target,
+            name=name,
             prefix=prefix,
             mapping=inline_mapping,
             mapping_source=mapping_source,
@@ -282,54 +274,6 @@ def _write_parameter_set(
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(data)
     return target_name
-
-
-def _select_target(ssd, target: str | None) -> Element:
-    """Return the root system, or the element named by a dotted *target*."""
-    if ssd.xml.system is None:
-        raise ValueError("SSP system structure has no system")
-    if target is None:
-        return ssd.xml.system
-    parts = target.split(".")
-    if any(not part for part in parts):
-        raise ValueError(f"Invalid target path {target!r}")
-    element: Element = ssd.xml.system
-    for index, part in enumerate(parts):
-        final = index == len(parts) - 1
-        matches = [child for child in element.elements if child.name == part]
-        if not matches:
-            raise KeyError(f"No element '{part}' under '{element.name}'")
-        if len(matches) > 1:
-            raise KeyError(f"Element '{part}' is ambiguous under '{element.name}'")
-        match = matches[0]
-        if not final and not isinstance(match, Ssd1System):
-            raise KeyError(f"No system '{part}' under '{element.name}'")
-        element = match
-    return element
-
-
-def _append_binding(
-    element: Element,
-    *,
-    source: str | None,
-    parameter_set: ParameterSet | None,
-    prefix: str | None,
-    mapping: ParameterMapping | None,
-    mapping_source: str | None,
-) -> ParameterBinding:
-    """Append one binding to *element* without merging into an existing set."""
-    binding = Ssd1ParameterBinding(
-        source=source,
-        prefix=prefix,
-        parameter_set=parameter_set,
-    )
-    if mapping is not None or mapping_source is not None:
-        binding.parameter_mapping = Ssd1ParameterMappingReference(
-            source=mapping_source,
-            mapping=mapping,
-        )
-    element.parameter_bindings.append(binding)
-    return binding
 
 
 __all__ = ["bind_parameters"]

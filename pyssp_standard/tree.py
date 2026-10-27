@@ -62,7 +62,7 @@ class Element(Protocol):
 
     def add_parameter_binding(
         self,
-        source: str,
+        source: str | None = None,
         *,
         prefix: str | None = None,
         parameter_set: ParameterSet | None = None,
