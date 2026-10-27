@@ -130,9 +130,15 @@ def test_add_fmu_directory_missing_model_description_raises(tmp_path):
 
 
 def test_add_fmu_directory_is_packed_as_nested_fmu_on_archive_commit(fmu_directory_fixture, tmp_path):
+    fmu_dir = tmp_path / "0001_ECS_HW"
+    shutil.copytree(fmu_directory_fixture, fmu_dir)
+    library = fmu_dir / "binaries" / "linux64" / "plant.so"
+    library.parent.mkdir(parents=True)
+    library.write_bytes(b"library")
+
     ssp_path = tmp_path / "dir_copy_test.ssp"
     with SSP(ssp_path, mode="w") as ssp:
-        resource_name = ssp.add_fmu("plant", fmu_directory_fixture)
+        resource_name = ssp.add_fmu("plant", fmu_dir)
     assert resource_name == "0001_ECS_HW.fmu"
 
     with zipfile.ZipFile(ssp_path, "r") as ssp_archive:
@@ -148,7 +154,7 @@ def test_add_fmu_directory_is_packed_as_nested_fmu_on_archive_commit(fmu_directo
         fmu_names = set(fmu_archive.namelist())
 
     assert "modelDescription.xml" in fmu_names
-    assert any(n.startswith("binaries/") for n in fmu_names)
+    assert "binaries/linux64/plant.so" in fmu_names
 
 
 def test_add_fmu_extensionless_directory_is_stored_as_compressed_fmu(fmu_directory_fixture, tmp_path):
