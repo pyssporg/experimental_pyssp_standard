@@ -21,21 +21,27 @@ __all__ = [
     "LSRefExperiments", "LSRefManifest", "MappingEntry", "ModelDescription",
     "Parameter", "ParameterBinding", "ParameterMapping",
     "ParameterMappingReference", "ParameterSet",
-    "SRMD", "SSB", "SSD", "SSM", "SSP",
-    "Ssp1Parameter", "Ssp1ParameterMapping", "Ssp1ParameterSet", "SSV",
-    "System", "get_repo_root", "LS_REF_EXTRA_DIR",
-    "copy_resource_directory", "package_archive", "parameters_by_name",
-    "resolve_parameter_mapping", "unpack_archive",
+    "SRMD", "SSB", "SSD", "SSM", "SSP", "SSV", "System",
+    "get_repo_root", "LS_REF_EXTRA_DIR", "copy_resource_directory",
+    "package_archive", "parameters_by_name", "resolve_parameter_mapping",
+    "unpack_archive", "validate_component_fmu",
 ]
 ```
 
-The SSD model types (`Component`, `Connection`, `Connector`,
-`DefaultExperiment`, `System`) and the concrete SSP1 parameter types
-(`Ssp1Parameter`, `Ssp1ParameterSet`, `Ssp1ParameterMapping`) are published so
-consumers can annotate and build documents without importing
-`pyssp_standard.ssd` or `pyssp_standard.standard.*`. They are the concrete
-implementations behind the protocols; `ParameterMapping` itself stays a
-Protocol and is not constructible.
+## Tree Protocol
+
+`pyssp_standard/tree.py` publishes the version-neutral SSD tree: `Connector`,
+`Connection`, `ParameterMappingReference`, `ParameterBinding`,
+`DefaultExperiment`, `Element`, `Component`, and `System`. They are
+`@runtime_checkable` protocols, so consumers annotate and `isinstance`-check
+against them; `Component` and `System` are mutually exclusive. Tree classes are
+never instantiated by consumers. Documents are built through facade methods:
+`SSD.new_system`, `System.add_component`, `System.add_subsystem`,
+`System.add_connection`, `Element.add_connector`,
+`Element.add_parameter_binding`, `SSV.create_parameter_set`, and
+`SSM.create_mapping`. `SSD` owns the SSP version. `add_parameter_binding`
+carries either an inline `mapping=` or an external `mapping_source=` reference,
+never a hand-built reference object.
 
 `SSD.flatten()` is the public facade for replacing nested systems with one
 flattened system; callers do not import the SSP1 codec or flatten operation.
@@ -52,13 +58,15 @@ parameter sets and parameter mappings:
   name; `resolve_parameter_mapping(parameters, mappings)` keys the source
   parameters by mapping target. They live in `parameters.py` and are exported
   from the package surface.
+- Facade construction: `SSV.create_parameter_set()` and `SSM.create_mapping()`
+  build in-memory documents at the library default version, or an explicitly
+  supported one, without touching the filesystem.
 - Facade mutators: `SSV.add_parameter()`, `SSV.extend_parameters()`,
   `SSM.add_mapping()`. They delegate to the versioned model, and `SSV.xml` is
   typed as `ParameterSet`.
 - `SSV.parameters_by_name()` works for SSP1 and SSP2 documents.
-- `ParameterMapping` is the protocol. `Ssp1ParameterMapping` is the concrete
-  SSP1 dataclass in `standard/ssp1/model/ssm_model.py`, exported at the package
-  top level for consumers that construct mappings.
+- `ParameterMapping` is the protocol; `SSM.create_mapping()` returns the
+  concrete SSP1 dataclass, which stays internal.
 
 Models do not import `parameters.py`; only the facades, the package
 `__init__.py`, and consumers do.

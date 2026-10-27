@@ -21,3 +21,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Parameter sets and mappings cross the library border as version-neutral Protocol types, not concrete SSP1 classes.
 - **IMD-003** — Publish SSD model types and concrete parameter types at the package border · accepted · 2026-10-27 · `IMD-003`
   Consumers import pyssp_standard only through its top-level surface; the package publishes the SSD tree types and the concrete SSP1 parameter types.
+- **IMD-004** — Replace the SSP1 tree classes with protocols and facade construction · accepted · 2026-10-27 · `IMD-004`
+  The public surface carries no SSP version token; the SSD tree is protocols and every document is built through facade methods.

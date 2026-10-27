@@ -77,24 +77,24 @@ with SSB("dictionary.ssb", mode="r") as ssb:
 Use `SSD` for standalone system structure files.
 
 ```python
-from pyssp_standard.ssd import Component, Connection, Connector, DefaultExperiment, SSD, System
+from pyssp_standard import SSD
 
 with SSD("SystemStructure.ssd", mode="w") as ssd:
-    ssd.xml.name = "Demo"
-    ssd.xml.version = "1.0"
-    ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
+    system = ssd.new_system("system")
+    ssd.rename("Demo")
+    ssd.set_default_experiment(start_time=0.0, stop_time=1.0)
 
-    component = Component()
-    component.name = "component"
-    component.component_type = "application/x-fmu-sharedlibrary"
-    component.source = "resources/example.fmu"
-    component.implementation = "CoSimulation"
-    component.connectors.append(Connector(None, "x", "output", "Real"))
-
-    ssd.xml.system = System(None, "system")
-    ssd.xml.system.elements.append(component)
-    ssd.xml.system.connectors.append(Connector(None, "x", "output", "Real"))
-    ssd.xml.system.add_connection(Connection(start_element="component", start_connector="x", end_connector="x"))
+    component = system.add_component(
+        "component",
+        source="resources/example.fmu",
+        component_type="application/x-fmu-sharedlibrary",
+        implementation="CoSimulation",
+    )
+    component.add_connector("x", "output", "Real")
+    system.add_connector("x", "output", "Real")
+    system.add_connection(
+        start_element="component", start_connector="x", end_connector="x"
+    )
 ```
 
 ## SSP

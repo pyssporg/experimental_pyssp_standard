@@ -62,6 +62,6 @@ with SSP("system.ssp", mode="r") as ssp:
 
 - Use `SSD(path)` for file-local SSD work.
 - Use `SSP(path).system_structure()` when edits need archive-aware resolution of external `.ssv` and `.ssm` references.
-- For SSD structure edits, prefer `ssd.xml.system` as the canonical model entry point.
+- For SSD structure edits, prefer `ssd.system` as the canonical model entry point.
 - Use `SSD.flatten()` for the public flatten operation; do not import the SSP1 codec or operation modules directly.
 - Legacy and unsupported material is kept outside the main docs flow and should not be treated as the primary API surface.

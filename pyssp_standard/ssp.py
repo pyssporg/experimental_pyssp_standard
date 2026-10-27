@@ -13,7 +13,7 @@ from pyssp_standard.ls_ref import (
     LSRefExperiment,
     LSRefExperiments,
 )
-from pyssp_standard.standard.ssp1.model.ssd_model import Ssd1System
+from pyssp_standard.standard.ssp1.model.ssd_model import Ssd1ParameterBinding
 from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
     FmuEntry,
     iter_fmu_entries,
@@ -21,7 +21,7 @@ from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
 from pyssp_standard.standard.ssp1.operations.model_description_to_ssd import (
     add_component_to_system_structure,
 )
-from pyssp_standard.ssd import ParameterBinding, SSD
+from pyssp_standard.ssd import SSD
 from pyssp_standard.common.document_runtime import DocumentRuntime
 from pyssp_standard.common.reference_specs import EXTERNAL_REFERENCE_SPECS
 from pyssp_standard.common.archive import FMI_EPOCH, copy_resource_directory
@@ -82,7 +82,7 @@ class SSP:
         resource_name: str | None = None,
         mapping_resource_name: str | None = None,
         prefix: str | None = None,
-    ) -> ParameterBinding:
+    ) -> Ssd1ParameterBinding:
         parameter_set_path = Path(parameter_set_path)
         parameter_set_resource_name = (
             self.add_resource(parameter_set_path)
@@ -106,9 +106,9 @@ class SSP:
         )
 
         with self.system_structure() as ssd:
-            if ssd.xml.system is None:
-                ssd.xml.system = Ssd1System(name=ssd.xml.name or "system")
-            return ssd.xml.system.add_external_parameterset(
+            if ssd.system is None:
+                ssd.new_system(ssd.xml.name or "system")
+            return ssd.system.add_external_parameterset(
                 source=f"resources/{parameter_set_resource_name}",
                 mapping_source=(
                     f"resources/{mapping_resource_name}"

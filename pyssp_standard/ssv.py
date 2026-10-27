@@ -32,6 +32,20 @@ class SSV(XmlDocument[ParameterSet]):
             return Ssp2ParameterSet(name=self.path.stem or "parameters", version="2.0")
         return Ssp1ParameterSet(name=self.path.stem or "parameters", version="1.0")
 
+    @classmethod
+    def create_parameter_set(
+        cls, name: str, *, version: str | None = None
+    ) -> ParameterSet:
+        """Return an in-memory parameter set; version None means the default SSP version."""
+        selected = version or "1.0"
+        if selected == "1.0":
+            return Ssp1ParameterSet(name=name, version="1.0")
+        if selected == "2.0":
+            return Ssp2ParameterSet(name=name, version="2.0")
+        raise ValueError(
+            f"Unsupported SSV version '{selected}'; supported versions: 1.0, 2.0"
+        )
+
     def parameters_by_name(self) -> dict[str, Parameter]:
         """Return the parameter set's parameters keyed by name; last duplicate wins."""
         return parameters_by_name(self.xml)

@@ -4,30 +4,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Mapping
 
+from pyssp_standard.parameters import Parameter
+from pyssp_standard.tree import DefaultExperiment, System
 from pyssp_standard.standard.ssp1.operations.ssd_parameters import extend_component_parametersets
 from pyssp_standard.standard.ssp1.model.ssd_model import (
-    Ssd1Component,
-    Ssd1Connection,
-    Ssd1Connector,
     Ssd1DefaultExperiment,
-    Ssd1ParameterBinding,
-    Ssd1ParameterMappingReference,
     Ssd1SystemStructureDescription,
     Ssd1System,
 )
 from pyssp_standard.common.xml_document import XmlDocument
-
-from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1DocumentMetadata
-from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
-
-
-Connection = Ssd1Connection
-System = Ssd1System
-DefaultExperiment = Ssd1DefaultExperiment
-Component = Ssd1Component
-Connector = Ssd1Connector
-ParameterBinding = Ssd1ParameterBinding
-ParameterMappingReference = Ssd1ParameterMappingReference
 
 
 class SSD(XmlDocument[Ssd1SystemStructureDescription]):
@@ -44,12 +29,44 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
     def _create_document(self) -> Ssd1SystemStructureDescription:
         return Ssd1SystemStructureDescription(name=self.path.stem or "system", version="1.0", system=Ssd1System(name="system"))
 
+    @property
+    def system(self) -> System | None:
+        """Top-level system, or ``None`` when the document has none."""
+        return self.xml.system
+
+    @property
+    def default_experiment(self) -> DefaultExperiment | None:
+        return self.xml.default_experiment
+
+    def new_system(self, name: str) -> System:
+        """Replace the top-level system with a new empty one.
+
+        The document name is left unchanged; call :meth:`rename` to set it.
+        """
+        self.xml.system = Ssd1System(name=name)
+        return self.xml.system
+
+    def rename(self, name: str) -> None:
+        """Set the document name, leaving the system tree untouched."""
+        self.xml.name = name
+
+    def set_default_experiment(
+        self,
+        *,
+        start_time: float | None = None,
+        stop_time: float | None = None,
+    ) -> None:
+        """Replace the default experiment with the given values."""
+        self.xml.default_experiment = Ssd1DefaultExperiment(
+            start_time=start_time,
+            stop_time=stop_time,
+        )
 
     def extend_component_parameterset(
         self,
         parameters_by_component: Mapping[
             str,
-            Mapping[str, object] | Iterable[Ssp1Parameter | tuple[str, object]],
+            Mapping[str, object] | Iterable[Parameter | tuple[str, object]],
         ],
     ) -> None:
         """Extend inline parameter sets for components by component name.
@@ -75,25 +92,23 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
 
     def extend_system_parameterset(
         self,
-        parameters: Mapping[str, object] | Iterable[Ssp1Parameter | tuple[str, object]],
+        parameters: Mapping[str, object] | Iterable[Parameter | tuple[str, object]],
         *,
         binding_name: str | None = None,
         prefix: str | None = None,
         version: str = "1.0",
-        metadata: Ssp1DocumentMetadata | None = None,
         mapping_source: str | None = None,
     ) -> None:
         """Extend the top-level system's inline parameter set.
 
         Args:
             parameters: Parameter values, either a mapping of names to values or
-                an iterable of ``Ssp1Parameter`` objects and ``(name, value)``
+                an iterable of ``Parameter`` objects and ``(name, value)``
                 tuples.
             binding_name: Name of the inline parameter set; defaults to
                 ``"<system name>_parameters"``.
             prefix: Optional prefix applied to the parameter binding.
             version: SSP version stored on a newly created parameter set.
-            metadata: Metadata for a newly created parameter set.
             mapping_source: Optional ``.ssm`` reference attached to the binding
                 as its parameter mapping; an existing reference is replaced.
         """
@@ -104,7 +119,6 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
             binding_name=binding_name,
             prefix=prefix,
             version=version,
-            metadata=metadata,
             mapping_source=mapping_source,
         )
 
@@ -116,6 +130,3 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
         flattened = flatten_ssd(self.xml)
         flattened.version = "1.0"
         self.from_xml(Ssp1SsdCodec().serialize(flattened))
-
-
-

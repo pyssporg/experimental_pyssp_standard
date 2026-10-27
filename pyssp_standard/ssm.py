@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from datetime import datetime
 from pathlib import Path
 
@@ -24,6 +24,24 @@ class SSM(XmlDocument[ParameterMapping]):
 
     def _create_document(self) -> Ssp1ParameterMapping:
         return Ssp1ParameterMapping(version="1.0")
+
+    @classmethod
+    def create_mapping(
+        cls,
+        entries: Iterable[tuple[str, str]] = (),
+        *,
+        version: str | None = None,
+    ) -> ParameterMapping:
+        """Return an in-memory mapping with one entry per (source, target) pair."""
+        selected = version or "1.0"
+        if selected != "1.0":
+            raise ValueError(
+                f"Unsupported SSM version '{selected}'; supported versions: 1.0"
+            )
+        mapping = Ssp1ParameterMapping(version="1.0")
+        for source, target in entries:
+            mapping.add_mapping(source, target)
+        return mapping
 
     def resolve(self, parameters: Mapping[str, Parameter]) -> dict[str, Parameter]:
         """Resolve this mapping's entries against parameters keyed by source name."""

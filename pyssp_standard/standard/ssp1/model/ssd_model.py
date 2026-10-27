@@ -79,6 +79,47 @@ class Ssd1Component:
             metadata=metadata,
         )
 
+    def add_connector(
+        self,
+        name: str,
+        kind: str,
+        type_name: str | None = None,
+        *,
+        type_attributes: Mapping[str, str] | None = None,
+    ) -> Ssd1Connector:
+        connector = Ssd1Connector(
+            name=name,
+            kind=kind,
+            type_name=type_name,
+            type_attributes=dict(type_attributes or {}),
+        )
+        self.connectors.append(connector)
+        return connector
+
+    def add_parameter_binding(
+        self,
+        source: str,
+        *,
+        prefix: str | None = None,
+        parameter_set: Ssp1ParameterSet | None = None,
+        mapping: Ssp1ParameterMapping | None = None,
+        mapping_source: str | None = None,
+    ) -> "Ssd1ParameterBinding":
+        reference = None
+        if mapping is not None or mapping_source is not None:
+            reference = Ssd1ParameterMappingReference(
+                source=mapping_source,
+                mapping=mapping,
+            )
+        binding = Ssd1ParameterBinding(
+            source=source,
+            prefix=prefix,
+            parameter_set=parameter_set,
+            parameter_mapping=reference,
+        )
+        self.parameter_bindings.append(binding)
+        return binding
+
 
 @dataclass
 class Ssd1ParameterMappingReference(ExternalReference):
@@ -152,7 +193,83 @@ class Ssd1System:
             else:
                 yield prefix, element
 
-    def add_connection(self, connection: Ssd1Connection) -> Ssd1Connection:
+    def add_connector(
+        self,
+        name: str,
+        kind: str,
+        type_name: str | None = None,
+        *,
+        type_attributes: Mapping[str, str] | None = None,
+    ) -> Ssd1Connector:
+        connector = Ssd1Connector(
+            name=name,
+            kind=kind,
+            type_name=type_name,
+            type_attributes=dict(type_attributes or {}),
+        )
+        self.connectors.append(connector)
+        return connector
+
+    def add_parameter_binding(
+        self,
+        source: str,
+        *,
+        prefix: str | None = None,
+        parameter_set: Ssp1ParameterSet | None = None,
+        mapping: Ssp1ParameterMapping | None = None,
+        mapping_source: str | None = None,
+    ) -> "Ssd1ParameterBinding":
+        reference = None
+        if mapping is not None or mapping_source is not None:
+            reference = Ssd1ParameterMappingReference(
+                source=mapping_source,
+                mapping=mapping,
+            )
+        binding = Ssd1ParameterBinding(
+            source=source,
+            prefix=prefix,
+            parameter_set=parameter_set,
+            parameter_mapping=reference,
+        )
+        self.parameter_bindings.append(binding)
+        return binding
+
+    def add_component(
+        self,
+        name: str,
+        *,
+        source: str = "",
+        component_type: str | None = None,
+        implementation: str | None = None,
+    ) -> Ssd1Component:
+        component = Ssd1Component(
+            name=name,
+            source=source,
+            component_type=component_type,
+            implementation=implementation,
+        )
+        self.elements.append(component)
+        return component
+
+    def add_subsystem(self, name: str) -> "Ssd1System":
+        subsystem = Ssd1System(name=name)
+        self.elements.append(subsystem)
+        return subsystem
+
+    def add_connection(
+        self,
+        *,
+        start_element: str | None = None,
+        start_connector: str = "",
+        end_element: str | None = None,
+        end_connector: str = "",
+    ) -> Ssd1Connection:
+        connection = Ssd1Connection(
+            start_element=start_element,
+            start_connector=start_connector,
+            end_element=end_element,
+            end_connector=end_connector,
+        )
         self.connections.append(connection)
         return connection
 

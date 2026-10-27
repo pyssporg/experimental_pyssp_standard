@@ -116,8 +116,8 @@ class FMU:
                 expose_system_connectors=expose_system_connectors,
             )
             with ssp.system_structure() as ssd:
-                ssd.xml.name = system_name
-                if ssd.xml.system is not None:
-                    ssd.xml.system.name = system_name
+                ssd.rename(system_name)
+                if ssd.system is not None:
+                    ssd.system.name = system_name
 
         return path

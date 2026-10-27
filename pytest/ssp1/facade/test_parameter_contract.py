@@ -139,7 +139,8 @@ def test_public_imports_expose_version_neutral_contract():
     assert pyssp_standard.ParameterMapping is ParameterMapping
     assert pyssp_standard.ParameterMapping is not Ssp1ParameterMapping
     assert pyssp_standard.ParameterBinding is ParameterBinding
-    assert pyssp_standard.ssd.ParameterBinding is ParameterBinding
+    assert not hasattr(pyssp_standard.ssd, "ParameterBinding")
+    assert not hasattr(pyssp_standard.ssd, "Component")
     assert not hasattr(pyssp_standard.ssd, "ParameterMapping")
 
     public_names = {"Parameter", "ParameterSet", "ParameterMapping", "MappingEntry", "ParameterBinding"}

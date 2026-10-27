@@ -4,7 +4,7 @@ import pytest
 import shutil
 from xml.etree import ElementTree as ET
 
-from pyssp_standard.ssd import Component, Connection, Connector, DefaultExperiment, SSD, System
+from pyssp_standard import SSD
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation, Ssp1Parameter
 
 
@@ -17,33 +17,35 @@ def test_create_round_trip(tmp_path):
     path = tmp_path / "test.ssd"
 
     with SSD(path, mode="w") as ssd:
-        ssd.xml.name = "Test SSD"
-        ssd.xml.version = "1.0"
-        ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
+        system = ssd.new_system("system")
+        ssd.rename("Test SSD")
+        ssd.set_default_experiment(start_time=0.0, stop_time=1.0)
 
-        component = Component()
-        component.name = "component"
-        component.component_type = "application/x-fmu-sharedlibrary"
-        component.source = "resources/example.fmu"
-        component.implementation = "CoSimulation"
-        component.connectors.append(Connector(None, "x", "output", "Real"))
-
-        ssd.xml.system = System(None, "system")
-        ssd.xml.system.elements.append(component)
-        ssd.xml.system.connectors.append(Connector(None, "x", "output", "Real"))
-        ssd.xml.system.add_connection(Connection(start_element="component", start_connector="x", end_connector="x"))
+        component = system.add_component(
+            "component",
+            source="resources/example.fmu",
+            component_type="application/x-fmu-sharedlibrary",
+            implementation="CoSimulation",
+        )
+        component.add_connector("x", "output", "Real")
+        system.add_connector("x", "output", "Real")
+        system.add_connection(
+            start_element="component",
+            start_connector="x",
+            end_connector="x",
+        )
 
     with SSD(path, mode="r") as ssd:
         assert ssd.xml.name == "Test SSD"
         assert ssd.xml.version == "1.0"
-        assert ssd.xml.default_experiment is not None
-        assert ssd.xml.default_experiment.start_time == 0.0
-        assert ssd.xml.default_experiment.stop_time == 1.0
-        assert ssd.xml.system is not None
-        assert len(ssd.xml.system.elements) == 1
-        assert len(ssd.xml.system.connectors) == 1
-        assert len(ssd.xml.system.get_connections()) == 1
-        assert ssd.xml.system.elements[0].component_type == "application/x-fmu-sharedlibrary"
+        assert ssd.default_experiment is not None
+        assert ssd.default_experiment.start_time == 0.0
+        assert ssd.default_experiment.stop_time == 1.0
+        assert ssd.system is not None
+        assert len(ssd.system.elements) == 1
+        assert len(ssd.system.connectors) == 1
+        assert len(ssd.system.get_connections()) == 1
+        assert ssd.system.elements[0].component_type == "application/x-fmu-sharedlibrary"
 
 
 def test_context_exit_validates_before_saving_invalid_document(tmp_path):
@@ -51,10 +53,11 @@ def test_context_exit_validates_before_saving_invalid_document(tmp_path):
 
     with pytest.raises(ValueError, match="SSD XML failed XSD validation"):
         with SSD(path, mode="w") as ssd:
-            ssd.xml.name = "Invalid SSD"
-            ssd.xml.version = "1.0"
-            ssd.xml.system = System(None, "system")
-            ssd.xml.system.connectors.append(Connector(None, "x", "output", "Real", {"start": "0.0"}))
+            ssd.rename("Invalid SSD")
+            system = ssd.new_system("system")
+            system.add_connector(
+                "x", "output", "Real", type_attributes={"start": "0.0"}
+            )
 
     assert not path.exists()
 
@@ -64,28 +67,40 @@ def test_editing_connections_preserves_compliance(tmp_path, embrace_ssd_fixture)
     shutil.copy(embrace_ssd_fixture, path)
 
     with SSD(path, "a") as ssd:
-        ssd.xml.system.add_connection(
-            Connection(start_element="house", start_connector="garage", end_element="work", end_connector="parking")
+        system = ssd.system
+        system.add_connection(
+            start_element="house",
+            start_connector="garage",
+            end_element="work",
+            end_connector="parking",
         )
-        ssd.xml.system.remove_connection(
-            Connection(
-                start_element="Atmos",
-                start_connector="Tamb",
-                end_element="Consumer",
-                end_connector="Tamb",
-            )
+        removed = next(
+            connection
+            for connection in system.connections
+            if connection.start_element == "Atmos"
+            and connection.start_connector == "Tamb"
+            and connection.end_element == "Consumer"
+            and connection.end_connector == "Tamb"
         )
+        system.remove_connection(removed)
         assert ssd.check_compliance() is True
 
     with SSD(path) as ssd:
-        assert len(ssd.xml.system.list_connectors(parent="Consumer")) == 76
-        assert any(connection.start_element == "house" for connection in ssd.xml.system.get_connections())
+        assert len(ssd.system.list_connectors(parent="Consumer")) == 76
+        assert any(
+            connection.start_element == "house"
+            for connection in ssd.system.get_connections()
+        )
 
 
 def test_standalone_facade_preserves_external_binding_reference_without_resolution(mixed_ssd_fixture):
     with SSD(mixed_ssd_fixture) as ssd:
-        assert len(ssd.xml.system.get_parameter_bindings()) == 2
-        external_binding = next(binding for binding in ssd.xml.system.get_parameter_bindings() if binding.source is not None)
+        assert len(ssd.system.get_parameter_bindings()) == 2
+        external_binding = next(
+            binding
+            for binding in ssd.system.get_parameter_bindings()
+            if binding.source is not None
+        )
         assert external_binding.prefix == "Controller"
         assert external_binding.source == "external_values.ssv"
         assert external_binding.parameter_set is None
@@ -94,7 +109,7 @@ def test_standalone_facade_preserves_external_binding_reference_without_resoluti
 
 def test_list_connectors_returns_component_connectors(embrace_ssd_fixture):
     with SSD(embrace_ssd_fixture) as ssd:
-        found = ssd.xml.system.list_connectors(parent="Consumer")
+        found = ssd.system.list_connectors(parent="Consumer")
 
     assert len(found) == 76
 
@@ -103,36 +118,35 @@ def test_round_trip_preserves_metadata_and_connector_annotations(tmp_path):
     path = tmp_path / "annotations.ssd"
 
     with SSD(path, mode="w") as ssd:
-        ssd.xml.name = "Annotated SSD"
-        ssd.xml.version = "1.0"
+        system = ssd.new_system("system")
+        ssd.rename("Annotated SSD")
         ssd.xml.metadata.annotations.append(
             Ssp1Annotation(
                 type_name="com.example.doc",
                 elements=[ET.fromstring('<doc xmlns="urn:test">ssd</doc>')],
             )
         )
-        connector = Connector(None, "x", "output", "Real")
+        connector = system.add_connector("x", "output", "Real")
         connector.annotations.append(
             Ssp1Annotation(
                 type_name="com.example.connector",
                 elements=[ET.fromstring('<connectorNote xmlns="urn:test">signal</connectorNote>')],
             )
         )
-        ssd.xml.system = System(None, "system")
-        ssd.xml.system.connectors.append(connector)
 
     with SSD(path, mode="r") as ssd:
         assert ssd.xml.metadata.annotations[0].elements[0].text == "ssd"
-        assert ssd.xml.system is not None
-        assert ssd.xml.system.connectors[0].annotations[0].type_name == "com.example.connector"
-        assert ssd.xml.system.connectors[0].annotations[0].elements[0].text == "signal"
+        assert ssd.system is not None
+        assert ssd.system.connectors[0].annotations[0].type_name == "com.example.connector"
+        assert ssd.system.connectors[0].annotations[0].elements[0].text == "signal"
 
 
 def test_component_can_extend_first_inline_parameterset_from_mapping(tmp_path):
     path = tmp_path / "inline_parameters.ssd"
 
     with SSD(path, mode="w") as ssd:
-        component = Component(name="component", source="resources/example.fmu")
+        system = ssd.new_system("system")
+        component = system.add_component("component", source="resources/example.fmu")
         component.extend_inline_parameterset(
             [
                 ("gain", 2.5),
@@ -141,13 +155,8 @@ def test_component_can_extend_first_inline_parameterset_from_mapping(tmp_path):
         )
         component.extend_inline_parameterset({"offset": -1})
 
-        ssd.xml.name = "Inline Parameters"
-        ssd.xml.version = "1.0"
-        ssd.xml.system = System(None, "system")
-        ssd.xml.system.elements.append(component)
-
     with SSD(path, mode="r") as ssd:
-        component = ssd.xml.system.elements[0]
+        component = ssd.system.elements[0]
         binding = component.parameter_bindings[0]
 
         assert binding.parameter_set is not None
@@ -164,13 +173,9 @@ def test_ssd_can_extend_component_inline_parametersets_by_name(tmp_path):
     path = tmp_path / "facade_parameters.ssd"
 
     with SSD(path, mode="w") as ssd:
-        component_a = Component(name="step", source="resources/step.fmu")
-        component_b = Component(name="gain", source="resources/gain.fmu")
-
-        ssd.xml.name = "Facade Parameters"
-        ssd.xml.version = "1.0"
-        ssd.xml.system = System(None, "system")
-        ssd.xml.system.elements.extend([component_a, component_b])
+        system = ssd.new_system("system")
+        system.add_component("step", source="resources/step.fmu")
+        system.add_component("gain", source="resources/gain.fmu")
 
         ssd.extend_component_parameterset(
             {
@@ -180,8 +185,8 @@ def test_ssd_can_extend_component_inline_parametersets_by_name(tmp_path):
         )
 
     with SSD(path, mode="r") as ssd:
-        step = next(element for element in ssd.xml.system.elements if element.name == "step")
-        gain = next(element for element in ssd.xml.system.elements if element.name == "gain")
+        step = next(element for element in ssd.system.elements if element.name == "step")
+        gain = next(element for element in ssd.system.elements if element.name == "gain")
 
         assert step.parameter_bindings[0].parameter_set is not None
         assert gain.parameter_bindings[0].parameter_set is not None
@@ -198,9 +203,7 @@ def test_ssd_can_extend_system_inline_parameterset(tmp_path):
     path = tmp_path / "system_parameters.ssd"
 
     with SSD(path, mode="w") as ssd:
-        ssd.xml.name = "System Parameters"
-        ssd.xml.version = "1.0"
-        ssd.xml.system = System(None, "system")
+        ssd.new_system("system")
 
         ssd.extend_system_parameterset(
             {
@@ -212,10 +215,10 @@ def test_ssd_can_extend_system_inline_parameterset(tmp_path):
         ssd.extend_system_parameterset({"step.offset": -1.0})
 
     with SSD(path, mode="r") as ssd:
-        assert ssd.xml.system is not None
-        binding = ssd.xml.system.get_parameter_bindings()[0]
+        assert ssd.system is not None
+        binding = ssd.system.get_parameter_bindings()[0]
 
-        assert len(ssd.xml.system.get_parameter_bindings()) == 1
+        assert len(ssd.system.get_parameter_bindings()) == 1
         assert binding.parameter_set is not None
         assert binding.parameter_set.name == "simulation_parameters"
         assert [(parameter.name, parameter.attributes["value"]) for parameter in binding.parameter_set.parameters] == [
@@ -229,12 +232,10 @@ def test_extend_system_parameterset_attaches_and_overwrites_mapping_source(tmp_p
     path = tmp_path / "mapping_source.ssd"
 
     with SSD(path, mode="w") as ssd:
-        ssd.xml.name = "Mapping Source"
-        ssd.xml.version = "1.0"
-        ssd.xml.system = System(None, "system")
+        ssd.new_system("system")
 
         ssd.extend_system_parameterset({"step.height": 2.0}, mapping_source="resources/x.ssm")
-        binding = ssd.xml.system.get_parameter_bindings()[0]
+        binding = ssd.system.get_parameter_bindings()[0]
         assert binding.parameter_mapping is not None
         assert binding.parameter_mapping.source == "resources/x.ssm"
 
@@ -242,9 +243,9 @@ def test_extend_system_parameterset_attaches_and_overwrites_mapping_source(tmp_p
         assert binding.parameter_mapping.source == "resources/y.ssm"
 
     with SSD(path, mode="r") as ssd:
-        binding = ssd.xml.system.get_parameter_bindings()[0]
+        binding = ssd.system.get_parameter_bindings()[0]
 
-        assert len(ssd.xml.system.get_parameter_bindings()) == 1
+        assert len(ssd.system.get_parameter_bindings()) == 1
         assert binding.parameter_mapping is not None
         assert binding.parameter_mapping.source == "resources/y.ssm"
 
@@ -277,9 +278,9 @@ def test_round_trip_preserves_structural_order_in_serialized_xml(tmp_path):
         pass
 
     with SSD(path, mode="r") as ssd:
-        assert [element.name for element in ssd.xml.system.elements] == ["beta_component", "alpha_component"]
-        assert [connector.name for connector in ssd.xml.system.connectors] == ["beta_bus", "alpha_bus"]
-        assert [connection.start_element for connection in ssd.xml.system.get_connections()] == [
+        assert [element.name for element in ssd.system.elements] == ["beta_component", "alpha_component"]
+        assert [connector.name for connector in ssd.system.connectors] == ["beta_bus", "alpha_bus"]
+        assert [connection.start_element for connection in ssd.system.get_connections()] == [
             "beta_component",
             "alpha_component",
         ]
@@ -288,3 +289,34 @@ def test_round_trip_preserves_structural_order_in_serialized_xml(tmp_path):
     assert xml_text.index('name="beta_component"') < xml_text.index('name="alpha_component"')
     assert xml_text.index('name="beta_bus"') < xml_text.index('name="alpha_bus"')
     assert xml_text.index('startElement="beta_component"') < xml_text.index('startElement="alpha_component"')
+
+
+def test_new_system_keeps_the_document_name(tmp_path):
+    path = tmp_path / "named.ssd"
+
+    with SSD(path, mode="w") as ssd:
+        ssd.rename("Document name")
+        system = ssd.new_system("root")
+        system.add_component("component", source="resources/example.fmu")
+
+    with SSD(path, mode="r") as ssd:
+        assert ssd.xml.name == "Document name"
+        assert ssd.system.name == "root"
+
+
+def test_add_parameter_binding_records_an_external_mapping_source(tmp_path):
+    path = tmp_path / "external_mapping.ssd"
+
+    with SSD(path, mode="w") as ssd:
+        system = ssd.new_system("root")
+        binding = system.add_parameter_binding(
+            "set.ssv",
+            mapping_source="resources/mapping.ssm",
+        )
+
+    with SSD(path, mode="r") as ssd:
+        stored = ssd.system.parameter_bindings[0]
+
+    assert binding.parameter_mapping.source == "resources/mapping.ssm"
+    assert stored.parameter_mapping.source == "resources/mapping.ssm"
+    assert stored.parameter_mapping.mapping is None
