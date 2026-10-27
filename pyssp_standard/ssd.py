@@ -18,7 +18,6 @@ from pyssp_standard.standard.ssp1.model.ssd_model import (
 from pyssp_standard.common.xml_document import XmlDocument
 
 from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1DocumentMetadata
-from pyssp_standard.standard.ssp1.model.ssm_model import Ssp1ParameterMapping
 from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
 
 
@@ -29,7 +28,6 @@ Component = Ssd1Component
 Connector = Ssd1Connector
 ParameterBinding = Ssd1ParameterBinding
 ParameterMappingReference = Ssd1ParameterMappingReference
-ParameterMapping = Ssp1ParameterMapping
 
 
 class SSD(XmlDocument[Ssd1SystemStructureDescription]):

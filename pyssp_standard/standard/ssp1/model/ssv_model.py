@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Iterable, Mapping
 
 from pyssp_standard.standard.ssp1.model.ssc_model import (
@@ -26,6 +26,15 @@ class Ssp1Parameter:
     id: str | None = None
     description: str | None = None
     annotations: list[Ssp1Annotation] = field(default_factory=list)
+
+    def renamed(self, name: str) -> Ssp1Parameter:
+        """Return a copy under a new name with independent mutable state."""
+        return replace(
+            self,
+            name=name,
+            attributes=dict(self.attributes),
+            annotations=list(self.annotations),
+        )
 
 
 @dataclass

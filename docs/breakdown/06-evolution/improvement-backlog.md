@@ -19,10 +19,10 @@ status: current
 
 | Priority | Open | In Progress | Done | Total |
 |----------|------|-------------|------|-------|
-| High     | 1    | 1           | 6    | 8     |
+| High     | 1    | 0           | 7    | 8     |
 | Medium   | 4    | 0           | 5    | 9     |
 | Low      | 2    | 0           | 6    | 8     |
-| **Total**| **7** | **1**       | **17**| **25**|
+| **Total**| **7** | **0**       | **18**| **25**|
 
 ---
 
@@ -54,5 +54,5 @@ status: current
 | IMP-022 | Deterministic ZIP timestamps for reproducible archive builds | Low | Archive | done |
 | IMP-028 | Formalize Reproducibility as a Non-Functional Requirement (NFR-001 / QA-001) | Medium | Archive (core), Quality Attributes (cross-cutting) | done |
 | IMP-029 | Common layer structural review — Runtime, Archive, XML, Reference handling | Medium | Common | proposed |
-| IMP-030 | Public parameter-set and parameter-mapping contract | High | Public API | in progress |
+| IMP-030 | Public parameter-set and parameter-mapping contract | High | Public API | done |
 

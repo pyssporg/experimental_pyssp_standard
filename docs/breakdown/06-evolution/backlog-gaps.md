@@ -20,14 +20,14 @@ Candidates live in INFO-015; the package map lives in INFO-011.
 | G1 | SSP2 codec/model/validation are empty | Missing impl | Cannot parse SSP2 documents |
 | G2 | FMI3 codec/model/validation are empty | Missing impl | Cannot parse FMI3 documents |
 | G3 | Generated binding paths referenced but absent | Dead metadata | Risk of ImportError |
-| G4 | Facades hardcode codecs instead of version routing | Architecture | Adding version requires facade change |
+| G4 | Facades hardcode codecs instead of version routing | Architecture | (resolved - facades call `get_codec_and_validator`) |
 | G5 | No end-user CLI | Missing feature | Python API only |
 | G6 | No cross-standard integration tests | Test gap | Risk of regression |
 | G7 | DocumentRuntime reference discovery untestable | Code quality | (resolved - IMP-002) |
 | G8 | Specialized runtimes should be inlined | Code quality | (resolved - IMP-001) |
 | G9 | EXTERNAL_REFERENCE_SPECS duplicated | Code quality | (resolved - IMP-003) |
-| G10 | Loose coupling between facade and codec/validator | Architecture | Bypasses routing abstraction |
-| G11 | SSP2 SSV registered but not implemented | Missing impl | Dead registration |
+| G10 | Loose coupling between facade and codec/validator | Architecture | (resolved - routing abstraction used) |
+| G11 | SSP2 SSV registered but not implemented | Missing impl | (resolved - IMP-005) |
 | G12 | ls_ref.py and ssd.py define near-identical runtimes | Code quality | (resolved - G12 merged into IMP-001) |
 | G13 | No SSP2/FMI3 user docs | Doc gap | Unclear version support |
 | G14 | Empty layer_example directory | Doc gap | (directory already removed) |

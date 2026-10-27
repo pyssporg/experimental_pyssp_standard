@@ -6,8 +6,9 @@ from datetime import datetime
 from pathlib import Path
 
 from pyssp_standard.common.xml_document import XmlDocument
-from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter, Ssp1ParameterSet
-from pyssp_standard.standard.ssp1.operations.parameter_values import parameters_by_name
+from pyssp_standard.parameters import Parameter, ParameterSet, parameters_by_name
+from pyssp_standard.standard.common.utils import infer_parameter_type_name
+from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1ParameterSet
 from pyssp_standard.standard.ssp2.model.ssv_model import Ssp2ParameterSet
 from pyssp_standard.standard.version_routing import (
     StandardVersion,
@@ -16,7 +17,7 @@ from pyssp_standard.standard.version_routing import (
 )
 
 
-class SSV(XmlDocument[Ssp1ParameterSet | Ssp2ParameterSet]):
+class SSV(XmlDocument[ParameterSet]):
     """SSV (ParameterSet) facade — version-aware through version routing."""
 
     def __init__(self, path: str | Path, mode: str = "r", version: str | None = None) -> None:
@@ -31,11 +32,37 @@ class SSV(XmlDocument[Ssp1ParameterSet | Ssp2ParameterSet]):
             return Ssp2ParameterSet(name=self.path.stem or "parameters", version="2.0")
         return Ssp1ParameterSet(name=self.path.stem or "parameters", version="1.0")
 
-    def parameters_by_name(self) -> dict[str, Ssp1Parameter]:
-        """Return the SSP1 parameter set's parameters keyed by name."""
-        if not isinstance(self.xml, Ssp1ParameterSet):
-            raise TypeError("parameters_by_name needs an SSP1 parameter set")
+    def parameters_by_name(self) -> dict[str, Parameter]:
+        """Return the parameter set's parameters keyed by name; last duplicate wins."""
         return parameters_by_name(self.xml)
+
+    def add_parameter(
+        self,
+        name: str,
+        value: object,
+        *,
+        type_name: str | None = None,
+        unit: str | None = None,
+        mimetype: str | None = None,
+    ) -> Parameter:
+        """Append a parameter, inferring the SSP type from ``value`` by default.
+
+        ``value`` is required because every SSP1 parameter type requires a value
+        attribute; omitting it would produce a document that fails compliance on
+        close.
+        """
+        ptype = type_name or ("Real" if value is None else infer_parameter_type_name(value))
+        return self.xml.add_parameter(
+            name,
+            ptype,
+            value=value,
+            unit=unit,
+            mimetype=mimetype,
+        )
+
+    def extend_parameters(self, parameters) -> list[Parameter]:
+        """Append parameters from compact values or explicit parameters."""
+        return self.xml.extend_parameters(parameters)
 
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.

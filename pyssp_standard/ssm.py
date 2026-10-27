@@ -5,13 +5,17 @@ from datetime import datetime
 from pathlib import Path
 
 from pyssp_standard.common.xml_document import XmlDocument
+from pyssp_standard.parameters import (
+    MappingEntry,
+    Parameter,
+    ParameterMapping,
+    resolve_parameter_mapping,
+)
 from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1Transformation
 from pyssp_standard.standard.ssp1.model.ssm_model import Ssp1ParameterMapping
-from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
-from pyssp_standard.standard.ssp1.operations.parameter_values import resolve_parameter_mapping
 
 
-class SSM(XmlDocument[Ssp1ParameterMapping]):
+class SSM(XmlDocument[ParameterMapping]):
     """Public SSM facade following the same layered pattern as SSV."""
 
     def __init__(self, path: str | Path, mode: str = "r"):
@@ -21,9 +25,25 @@ class SSM(XmlDocument[Ssp1ParameterMapping]):
     def _create_document(self) -> Ssp1ParameterMapping:
         return Ssp1ParameterMapping(version="1.0")
 
-    def resolve(self, parameters: Mapping[str, Ssp1Parameter]) -> dict[str, Ssp1Parameter]:
+    def resolve(self, parameters: Mapping[str, Parameter]) -> dict[str, Parameter]:
         """Resolve this mapping's entries against parameters keyed by source name."""
         return resolve_parameter_mapping(parameters, self.xml.mappings)
+
+    def add_mapping(
+        self,
+        source: str,
+        target: str,
+        *,
+        suppress_unit_conversion: bool | None = None,
+        transformation: object | None = None,
+    ) -> MappingEntry:
+        """Append a mapping entry from ``source`` to ``target``."""
+        return self.xml.add_mapping(
+            source,
+            target,
+            suppress_unit_conversion=suppress_unit_conversion,
+            transformation=transformation,
+        )
 
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.

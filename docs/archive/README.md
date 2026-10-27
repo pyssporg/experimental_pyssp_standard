@@ -19,3 +19,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Each XML and archive facade sets generationDateAndTime itself, formatting through one shared utility.
 - **IMD-002** — Public parameter-set and parameter-mapping contract · accepted · 2026-10-27 · `IMD-002`
   Parameter sets and mappings cross the library border as version-neutral Protocol types, not concrete SSP1 classes.
+- **IMD-003** — Publish SSD model types and concrete parameter types at the package border · accepted · 2026-10-27 · `IMD-003`
+  Consumers import pyssp_standard only through its top-level surface; the package publishes the SSD tree types and the concrete SSP1 parameter types.

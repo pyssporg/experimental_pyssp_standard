@@ -56,6 +56,11 @@ SSP Archive
 - Model objects are version-specific but share a common pattern: `__init__.py` re-exports.
 - The SSV and SSM models satisfy the public `ParameterSet` and `ParameterMapping`
   protocols structurally; the model modules do not import `parameters.py`.
+- Published model types are part of the package surface: `Component`,
+  `Connection`, `Connector`, `DefaultExperiment`, `System`, `Ssp1Parameter`,
+  `Ssp1ParameterSet`, and `Ssp1ParameterMapping`. Consumers import them from
+  `pyssp_standard`, never from `pyssp_standard.ssd` or
+  `pyssp_standard.standard.*`; everything else in `standard/` stays internal.
 
 ## Evidence
 

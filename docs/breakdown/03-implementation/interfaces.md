@@ -16,15 +16,26 @@ All public exports from `pyssp_standard/__init__.py`:
 
 ```python
 __all__ = [
+    "Component", "Connection", "Connector", "DefaultExperiment",
     "FMU", "FmuEntry", "LSRefExperiment", "LSRefExperimentResource",
     "LSRefExperiments", "LSRefManifest", "MappingEntry", "ModelDescription",
     "Parameter", "ParameterBinding", "ParameterMapping",
     "ParameterMappingReference", "ParameterSet",
-    "SRMD", "SSB", "SSD", "SSM", "SSP", "Ssp1Parameter", "SSV",
-    "get_repo_root", "LS_REF_EXTRA_DIR",
-    "copy_resource_directory", "package_archive", "unpack_archive",
+    "SRMD", "SSB", "SSD", "SSM", "SSP",
+    "Ssp1Parameter", "Ssp1ParameterMapping", "Ssp1ParameterSet", "SSV",
+    "System", "get_repo_root", "LS_REF_EXTRA_DIR",
+    "copy_resource_directory", "package_archive", "parameters_by_name",
+    "resolve_parameter_mapping", "unpack_archive",
 ]
 ```
+
+The SSD model types (`Component`, `Connection`, `Connector`,
+`DefaultExperiment`, `System`) and the concrete SSP1 parameter types
+(`Ssp1Parameter`, `Ssp1ParameterSet`, `Ssp1ParameterMapping`) are published so
+consumers can annotate and build documents without importing
+`pyssp_standard.ssd` or `pyssp_standard.standard.*`. They are the concrete
+implementations behind the protocols; `ParameterMapping` itself stays a
+Protocol and is not constructible.
 
 `SSD.flatten()` is the public facade for replacing nested systems with one
 flattened system; callers do not import the SSP1 codec or flatten operation.
@@ -39,14 +50,15 @@ parameter sets and parameter mappings:
   structurally and never import the contract.
 - Functions: `parameters_by_name(parameter_set)` keys a set's parameters by
   name; `resolve_parameter_mapping(parameters, mappings)` keys the source
-  parameters by mapping target. They live in `parameters.py`; the package
-  surface exports the contract types, not the two helpers.
+  parameters by mapping target. They live in `parameters.py` and are exported
+  from the package surface.
 - Facade mutators: `SSV.add_parameter()`, `SSV.extend_parameters()`,
   `SSM.add_mapping()`. They delegate to the versioned model, and `SSV.xml` is
   typed as `ParameterSet`.
 - `SSV.parameters_by_name()` works for SSP1 and SSP2 documents.
-- `ParameterMapping` is the protocol. `Ssp1ParameterMapping` remains the
-  concrete SSP1 dataclass in `standard/ssp1/model/ssm_model.py`.
+- `ParameterMapping` is the protocol. `Ssp1ParameterMapping` is the concrete
+  SSP1 dataclass in `standard/ssp1/model/ssm_model.py`, exported at the package
+  top level for consumers that construct mappings.
 
 Models do not import `parameters.py`; only the facades, the package
 `__init__.py`, and consumers do.
