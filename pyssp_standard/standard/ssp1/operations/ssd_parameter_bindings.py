@@ -16,6 +16,7 @@ def extend_inline_parameter_binding(
     prefix: str | None = None,
     version: str = "1.0",
     metadata: Ssp1DocumentMetadata | None = None,
+    mapping_source: str | None = None,
 ) -> Ssd1ParameterBinding:
     parameter_set = get_or_create_inlined_parameter_set(
         bindings,
@@ -25,7 +26,14 @@ def extend_inline_parameter_binding(
         metadata=metadata,
     )
     parameter_set.extend_parameters(parameters)
-    return next(binding for binding in bindings if binding.parameter_set is parameter_set and binding.source is None)
+    binding = next(
+        binding
+        for binding in bindings
+        if binding.parameter_set is parameter_set and binding.source is None
+    )
+    if mapping_source is not None:
+        binding.parameter_mapping = Ssd1ParameterMappingReference(source=mapping_source)
+    return binding
 
 
 def get_or_create_inlined_parameter_set(

@@ -7,6 +7,7 @@ from pyssp_standard.common.archive import (
 )
 from pyssp_standard.fmu import FMU
 from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import FmuEntry
+from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
 from pyssp_standard.md import ModelDescription
 from pyssp_standard.ls_ref import LSRefExperiments, LSRefManifest, LS_REF_EXTRA_DIR
 from pyssp_standard.standard.ls_ref.model import (
@@ -45,6 +46,7 @@ __all__ = [
     "SSD",
     "SSM",
     "SSP",
+    "Ssp1Parameter",
     "SSV",
     "get_repo_root",
     "LS_REF_EXTRA_DIR",

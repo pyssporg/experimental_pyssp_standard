@@ -20,6 +20,7 @@
 | CAP-011 | Simulation resource metadata (SRMD) | Read, create, edit, validate `.srmd` resource metadata | `srmd.py`, `standard/ssp1/codec/srmd_codec.py` |
 | CAP-012 | LS-REF manifest/experiments | Read/create/edit/validate LS-REF manifest and experiments documents | `ls_ref.py`, `standard/ls_ref/codec/` |
 | CAP-013 | Archive-aware parameter binding | Add external parameter sets + mappings to SSP system structures | `ssp.py` (`add_external_parameterset()`) |
+| CAP-016 | Scenario parameter resolution | Read typed SSV parameters and resolve SSM mappings to target-keyed parameters | `ssv.py`, `ssm.py`, `standard/ssp1/operations/parameter_values.py` |
 
 ## Future Capabilities (registered but not implemented)
 

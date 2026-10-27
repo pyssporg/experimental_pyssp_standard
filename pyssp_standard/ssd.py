@@ -83,8 +83,22 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
         prefix: str | None = None,
         version: str = "1.0",
         metadata: Ssp1DocumentMetadata | None = None,
+        mapping_source: str | None = None,
     ) -> None:
-        """Extend the top-level system's inline parameter set."""
+        """Extend the top-level system's inline parameter set.
+
+        Args:
+            parameters: Parameter values, either a mapping of names to values or
+                an iterable of ``Ssp1Parameter`` objects and ``(name, value)``
+                tuples.
+            binding_name: Name of the inline parameter set; defaults to
+                ``"<system name>_parameters"``.
+            prefix: Optional prefix applied to the parameter binding.
+            version: SSP version stored on a newly created parameter set.
+            metadata: Metadata for a newly created parameter set.
+            mapping_source: Optional ``.ssm`` reference attached to the binding
+                as its parameter mapping; an existing reference is replaced.
+        """
         if self.xml.system is None:
             raise RuntimeError("Cannot extend a parameter set without a system")
         self.xml.system.extend_inline_parameterset(
@@ -93,6 +107,7 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
             prefix=prefix,
             version=version,
             metadata=metadata,
+            mapping_source=mapping_source,
         )
 
     def flatten(self) -> None:

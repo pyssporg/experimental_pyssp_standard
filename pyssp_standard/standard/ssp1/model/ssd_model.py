@@ -195,6 +195,7 @@ class Ssd1System:
         prefix: str | None = None,
         version: str = "1.0",
         metadata: Ssp1DocumentMetadata | None = None,
+        mapping_source: str | None = None,
     ) -> "Ssd1ParameterBinding":
         from pyssp_standard.standard.ssp1.operations.ssd_parameter_bindings import (
             extend_inline_parameter_binding,
@@ -208,6 +209,7 @@ class Ssd1System:
             prefix=prefix,
             version=version,
             metadata=metadata,
+            mapping_source=mapping_source,
         )
 
     def add_external_parameterset(

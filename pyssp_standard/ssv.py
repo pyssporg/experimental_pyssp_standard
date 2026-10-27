@@ -6,7 +6,8 @@ from datetime import datetime
 from pathlib import Path
 
 from pyssp_standard.common.xml_document import XmlDocument
-from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1ParameterSet
+from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter, Ssp1ParameterSet
+from pyssp_standard.standard.ssp1.operations.parameter_values import parameters_by_name
 from pyssp_standard.standard.ssp2.model.ssv_model import Ssp2ParameterSet
 from pyssp_standard.standard.version_routing import (
     StandardVersion,
@@ -29,6 +30,12 @@ class SSV(XmlDocument[Ssp1ParameterSet | Ssp2ParameterSet]):
         if self._version == "2.0":
             return Ssp2ParameterSet(name=self.path.stem or "parameters", version="2.0")
         return Ssp1ParameterSet(name=self.path.stem or "parameters", version="1.0")
+
+    def parameters_by_name(self) -> dict[str, Ssp1Parameter]:
+        """Return the SSP1 parameter set's parameters keyed by name."""
+        if not isinstance(self.xml, Ssp1ParameterSet):
+            raise TypeError("parameters_by_name needs an SSP1 parameter set")
+        return parameters_by_name(self.xml)
 
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.

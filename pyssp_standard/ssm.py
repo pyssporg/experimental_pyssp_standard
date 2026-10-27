@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime
 from pathlib import Path
 
+from pyssp_standard.common.xml_document import XmlDocument
 from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1Transformation
 from pyssp_standard.standard.ssp1.model.ssm_model import Ssp1ParameterMapping
-from pyssp_standard.common.xml_document import XmlDocument
+from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1Parameter
+from pyssp_standard.standard.ssp1.operations.parameter_values import resolve_parameter_mapping
 
 
 class SSM(XmlDocument[Ssp1ParameterMapping]):
@@ -17,6 +20,10 @@ class SSM(XmlDocument[Ssp1ParameterMapping]):
 
     def _create_document(self) -> Ssp1ParameterMapping:
         return Ssp1ParameterMapping(version="1.0")
+
+    def resolve(self, parameters: Mapping[str, Ssp1Parameter]) -> dict[str, Ssp1Parameter]:
+        """Resolve this mapping's entries against parameters keyed by source name."""
+        return resolve_parameter_mapping(parameters, self.xml.mappings)
 
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.

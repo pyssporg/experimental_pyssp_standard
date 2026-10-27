@@ -195,6 +195,32 @@ def test_round_trip_preserves_enumerations(tmp_path):
         assert ssv.xml.parameters[0].attributes == {"value": "1", "name": "ON"}
 
 
+def test_parameters_by_name_returns_typed_parameters_and_keeps_last_duplicate(tmp_path):
+    path = tmp_path / "duplicates.ssv"
+    path.write_text(
+        """<?xml version="1.0" encoding="UTF-8"?>
+<ssv:ParameterSet xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="Duplicates">
+  <ssv:Parameters>
+    <ssv:Parameter name="gain"><ssv:Real value="1.0" /></ssv:Parameter>
+    <ssv:Parameter name="mode"><ssv:Enumeration value="1" name="ON" /></ssv:Parameter>
+    <ssv:Parameter name="gain"><ssv:Integer value="2" /></ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>
+""",
+        encoding="utf-8",
+    )
+
+    with SSV(path) as ssv:
+        parameters = ssv.parameters_by_name()
+
+    assert list(parameters) == ["gain", "mode"]
+    assert isinstance(parameters["gain"], Ssp1Parameter)
+    assert parameters["gain"].type_name == "Integer"
+    assert parameters["gain"].attributes == {"value": "2"}
+    assert parameters["mode"].type_name == "Enumeration"
+    assert parameters["mode"].attributes == {"value": "1", "name": "ON"}
+
+
 def test_round_trip_preserves_parameter_unit_and_enumeration_order_in_serialized_xml(tmp_path):
     path = tmp_path / "ordered.ssv"
     path.write_text(

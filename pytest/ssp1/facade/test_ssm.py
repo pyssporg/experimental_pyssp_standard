@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import xml.etree.ElementTree as ET
 
+import pytest
+
 from pyssp_standard.ssm import SSM, Ssp1Transformation
-from pyssp_standard.standard.ssp1.model import Ssp1Annotation
+from pyssp_standard.standard.ssp1.model import Ssp1Annotation, Ssp1Parameter
 from pyssp_standard.standard.ssp1.codec.ssm_codec import NS_SSC, NS_SSM
 
 
@@ -77,6 +79,85 @@ def test_round_trip_preserves_metadata_and_mapping_annotations(tmp_path):
         assert ssm.xml.metadata.annotations[0].elements[0].text == "mapping"
         assert ssm.xml.mappings[0].annotations[0].type_name == "com.example.mapping"
         assert ssm.xml.mappings[0].annotations[0].elements[0].attrib == {"mode": "copy"}
+
+
+def test_resolve_renames_to_targets_and_preserves_type_and_attributes(tmp_path):
+    path = tmp_path / "resolve.ssm"
+
+    with SSM(path, "w") as ssm:
+        ssm.xml.add_mapping("gain", "controller.gain")
+
+    parameter = Ssp1Parameter(
+        name="gain",
+        type_name="Integer",
+        attributes={"value": "2", "unit": "kg"},
+    )
+
+    with SSM(path) as ssm:
+        resolved = ssm.resolve({"gain": parameter})
+
+    assert list(resolved) == ["controller.gain"]
+    assert resolved["controller.gain"].name == "controller.gain"
+    assert resolved["controller.gain"].type_name == "Integer"
+    assert resolved["controller.gain"].attributes == {"value": "2", "unit": "kg"}
+    assert resolved["controller.gain"].attributes is not parameter.attributes
+
+
+def test_resolve_raises_for_missing_source(tmp_path):
+    path = tmp_path / "missing.ssm"
+
+    with SSM(path, "w") as ssm:
+        ssm.xml.add_mapping("unknown", "target")
+
+    with SSM(path) as ssm:
+        with pytest.raises(KeyError) as excinfo:
+            ssm.resolve({})
+
+    assert excinfo.value.args[0] == (
+        "Parameter mapping source 'unknown' is not present in the parameter set"
+    )
+
+
+def test_resolve_keeps_last_of_duplicate_targets(tmp_path):
+    path = tmp_path / "duplicate_targets.ssm"
+    path.write_text(
+        """<?xml version="1.0" encoding="UTF-8"?>
+<ssm:ParameterMapping xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="first" target="target" />
+  <ssm:MappingEntry source="second" target="target" />
+</ssm:ParameterMapping>
+""",
+        encoding="utf-8",
+    )
+
+    parameters = {
+        "first": Ssp1Parameter(name="first", type_name="Real", attributes={"value": "1"}),
+        "second": Ssp1Parameter(name="second", type_name="Real", attributes={"value": "2"}),
+    }
+
+    with SSM(path) as ssm:
+        resolved = ssm.resolve(parameters)
+
+    assert list(resolved) == ["target"]
+    assert resolved["target"].attributes == {"value": "2"}
+
+
+def test_resolve_does_not_apply_transformation(tmp_path):
+    path = tmp_path / "transform.ssm"
+
+    with SSM(path, "w") as ssm:
+        ssm.xml.add_mapping(
+            "gain",
+            "controller.gain",
+            transformation=Ssp1Transformation("LinearTransformation", {"factor": 2, "offset": 1}),
+        )
+
+    parameter = Ssp1Parameter(name="gain", type_name="Real", attributes={"value": "3"})
+
+    with SSM(path) as ssm:
+        resolved = ssm.resolve({"gain": parameter})
+
+    assert resolved["controller.gain"].attributes == {"value": "3"}
 
 
 def test_round_trip_preserves_mapping_order_in_serialized_xml(tmp_path):

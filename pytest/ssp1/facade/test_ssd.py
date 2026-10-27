@@ -225,6 +225,30 @@ def test_ssd_can_extend_system_inline_parameterset(tmp_path):
         ]
 
 
+def test_extend_system_parameterset_attaches_and_overwrites_mapping_source(tmp_path):
+    path = tmp_path / "mapping_source.ssd"
+
+    with SSD(path, mode="w") as ssd:
+        ssd.xml.name = "Mapping Source"
+        ssd.xml.version = "1.0"
+        ssd.xml.system = System(None, "system")
+
+        ssd.extend_system_parameterset({"step.height": 2.0}, mapping_source="resources/x.ssm")
+        binding = ssd.xml.system.get_parameter_bindings()[0]
+        assert binding.parameter_mapping is not None
+        assert binding.parameter_mapping.source == "resources/x.ssm"
+
+        ssd.extend_system_parameterset({"step.offset": -1.0}, mapping_source="resources/y.ssm")
+        assert binding.parameter_mapping.source == "resources/y.ssm"
+
+    with SSD(path, mode="r") as ssd:
+        binding = ssd.xml.system.get_parameter_bindings()[0]
+
+        assert len(ssd.xml.system.get_parameter_bindings()) == 1
+        assert binding.parameter_mapping is not None
+        assert binding.parameter_mapping.source == "resources/y.ssm"
+
+
 def test_round_trip_preserves_structural_order_in_serialized_xml(tmp_path):
     path = tmp_path / "ordered.ssd"
     path.write_text(
