@@ -7,7 +7,8 @@ import zipfile
 import pytest
 
 
-FIXTURE_DIR = Path("pytest/__fixture__")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+FIXTURE_DIR = Path(__file__).resolve().parent / "__fixture__"
 EMBRACE_DIR = FIXTURE_DIR / "embrace"
 
 
@@ -17,6 +18,16 @@ def _write_zip_from_tree(source_dir: Path, target_file: Path) -> Path:
             if path.is_file():
                 archive.write(path, arcname=path.relative_to(source_dir).as_posix())
     return target_file
+
+
+@pytest.fixture
+def fixture_dir() -> Path:
+    return FIXTURE_DIR
+
+
+@pytest.fixture
+def repo_root() -> Path:
+    return REPO_ROOT
 
 
 @pytest.fixture

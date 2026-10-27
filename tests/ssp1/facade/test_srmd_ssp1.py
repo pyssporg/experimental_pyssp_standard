@@ -9,8 +9,8 @@ from pyssp_standard.standard.ssp1.codec.srmd_codec import NS_SRMD, NS_STC, NS_XL
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation
 
 
-def test_check_compliance_accepts_reference_fixture():
-    with SRMD("pytest/__fixture__/test_schema_validation.srmd") as srmd:
+def test_check_compliance_accepts_reference_fixture(fixture_dir):
+    with SRMD(fixture_dir / "test_schema_validation.srmd") as srmd:
         assert srmd.check_compliance() is True
         assert len(srmd.xml.classifications) == 1
 

@@ -15,7 +15,7 @@ INFO-011, the public surface in INFO-012, and the test strategy in TEST-001.
 ## Test Structure
 
 ```
-pytest/
+tests/
 ├── conftest.py                    # Shared fixtures
 ├── ssp1/
 │   ├── codec/                     # XML round-trip tests

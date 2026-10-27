@@ -29,13 +29,13 @@ pytest
 Run one focused test module:
 
 ```bash
-pytest pytest/ssp1/facade/test_ssv.py
+pytest tests/ssp1/facade/test_ssv.py
 ```
 
 Run one test by name:
 
 ```bash
-pytest pytest/ssp1/orchestration/test_ssp.py -k external_parameter
+pytest tests/ssp1/orchestration/test_ssp.py -k external_parameter
 ```
 
 ## Documentation

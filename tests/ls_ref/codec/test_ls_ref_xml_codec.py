@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from pyssp_standard.standard.ls_ref.codec import LSRefExperimentsCodec, LSRefManifestCodec
 from pyssp_standard.standard.ls_ref.validation import LSRefExperimentsSchemaValidator
 
 
-def test_parses_manifest_example():
-    fixture = Path("3rdParty/ls-ref/docs/examples/fmi_ls_ref_manifest_example.xml")
+def test_parses_manifest_example(repo_root):
+    fixture = repo_root / "3rdParty/ls-ref/docs/examples/fmi_ls_ref_manifest_example.xml"
     document = LSRefManifestCodec().parse(fixture.read_text(encoding="utf-8"))
 
     assert document.name == "org.fmi-standard.fmi-ls-ref"
@@ -23,8 +21,8 @@ def test_parses_manifest_example():
     assert reparsed.related[0].source == "modelica/mymodel.mo"
 
 
-def test_parses_experiments_example():
-    fixture = Path("3rdParty/ls-ref/docs/examples/fmi_ls_ref_experiments_example.xml")
+def test_parses_experiments_example(repo_root):
+    fixture = repo_root / "3rdParty/ls-ref/docs/examples/fmi_ls_ref_experiments_example.xml"
     document = LSRefExperimentsCodec().parse(fixture.read_text(encoding="utf-8"))
 
     assert document.name == "Smoke Tests"

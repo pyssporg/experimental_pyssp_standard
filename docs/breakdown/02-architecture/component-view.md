@@ -14,34 +14,34 @@ status: current
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                     Public API Facades                           │
-│  SSP │ SSD │ SSV │ SSM │ FMU │ MD │ SRMD │ SSB │ LSRef*        │
-│  pyssp_standard/ssp.py, ssd.py, ssv.py, ssm.py, fmu.py, ...    │
+│                     Public API Facades                          │
+│  SSP │ SSD │ SSV │ SSM │ FMU │ MD │ SRMD │ SSB │ LSRef*         │
+│  src/pyssp_standard/ssp.py, ssd.py, ssv.py, ssm.py, fmu.py, ... │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ depends on
 ┌──────────────────────────▼──────────────────────────────────────┐
-│                      Orchestration                               │
-│  DocumentRuntime │ ArchiveRuntimes │ DirectoryRuntimes           │
-│  pyssp_standard/common/document_runtime.py                      │
-│  pyssp_standard/common/archive_runtime.py                       │
-│  pyssp_standard/common/directory_runtime.py                     │
+│                      Orchestration                              │
+│  DocumentRuntime │ ArchiveRuntimes │ DirectoryRuntimes          │
+│  src/pyssp_standard/common/document_runtime.py                  │
+│  src/pyssp_standard/common/archive_runtime.py                   │
+│  src/pyssp_standard/common/directory_runtime.py                 │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ dispatches
 ┌──────────────────────────▼──────────────────────────────────────┐
-│                    Standard-Specific Stacks                      │
-│  SSP1 │ SSP2* │ FMI2 │ FMI3* │ LS-REF                            │
-│  ┌─────────┐ ┌─────────┐ ┌──────────────┐                      │
-│  │ codec   │ │ model   │ │ validation   │                      │
-│  └─────────┘ └─────────┘ └──────────────┘                      │
-│  pyssp_standard/standard/<family>/codec/model/validation/       │
+│                    Standard-Specific Stacks                     │
+│  SSP1 │ SSP2* │ FMI2 │ FMI3* │ LS-REF                           │
+│  ┌─────────┐ ┌─────────┐ ┌──────────────┐                       │
+│  │ codec   │ │ model   │ │ validation   │                       │
+│  └─────────┘ └─────────┘ └──────────────┘                       │
+│  src/pyssp_standard/standard/<family>/codec/model/validation/   │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ backed by
 ┌──────────────────────────▼──────────────────────────────────────┐
-│                   Schema / Tooling                               │
+│                   Schema / Tooling                              │
 │  XSD files │ schema_targets │ version_routing                   │
-│  pyssp_standard/schema/                                         │
-│  pyssp_standard/tools/schema_targets.py                         │
-│  pyssp_standard/standard/version_routing.py                    │
+│  src/pyssp_standard/schema/                                     │
+│  src/pyssp_standard/tools/schema_targets.py                     │
+│  src/pyssp_standard/standard/version_routing.py                 │
 └─────────────────────────────────────────────────────────────────┘
 
 * = skeleton (codec/model/validation directories exist but are empty)
@@ -51,7 +51,7 @@ status: current
 
 | Component | Location | Responsibility |
 |-----------|----------|----------------|
-| **Public API Facades** | `pyssp_standard/*.py` (top-level) | Thin user-facing entry points, delegate to codec/model/validation |
+| **Public API Facades** | `src/pyssp_standard/*.py` (top-level) | Thin user-facing entry points, delegate to codec/model/validation |
 | **Orchestration** | `common/document_runtime.py` | Cross-file reference resolution, archive-aware sessions |
 | **Archive Layer** | `common/archive.py`, `archive_runtime.py`, `directory_runtime.py` | Zip unpack/repack, directory abstraction, context management |
 | **Codec** | `standard/<family>/codec/` | XML parse/serialize per document type, standalone XML logic |

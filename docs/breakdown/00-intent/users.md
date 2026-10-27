@@ -18,7 +18,7 @@ status: current
 | **Parameter author** | Engineer creating or editing `.ssv` parameter sets and `.ssm` mappings | `SSV`, `SSM` facades |
 | **CI pipeline** | Automated validation of SSP artifacts in build/test pipelines | `check_compliance()` on any facade |
 | **FMU consumer** | Engineer inspecting FMU archive contents (binaries, model description) | `FMU` facade, `ModelDescription` |
-| **Tool integrator** | Developer building higher-level tools on top of SSP/FMI | All public facades, `pyssp_standard/__init__.py` |
+| **Tool integrator** | Developer building higher-level tools on top of SSP/FMI | All public facades, `src/pyssp_standard/__init__.py` |
 
 ## User Workflows (from docs)
 
@@ -33,6 +33,6 @@ status: current
 
 - `docs/getting_started.md`: first-success workflows
 - `docs/user/python_api.md`: 7 example workflows
-- `pyssp_standard/ssp.py`: `add_fmu()`, `add_resource()`, `system_structure()`
-- `pyssp_standard/ssv.py`: read/create/edit SSV
-- `pyssp_standard/fmu.py`: `package_as_ssp()`, `model_description`, `binaries`
+- `src/pyssp_standard/ssp.py`: `add_fmu()`, `add_resource()`, `system_structure()`
+- `src/pyssp_standard/ssv.py`: read/create/edit SSV
+- `src/pyssp_standard/fmu.py`: `package_as_ssp()`, `model_description`, `binaries`

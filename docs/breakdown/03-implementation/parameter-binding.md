@@ -66,8 +66,8 @@ The facades only delegate, and neither duplicates the other's assembly.
 
 ## Evidence
 
-- `pyssp_standard/ssd.py`: `target()`, `bind_parameters()`
-- `pyssp_standard/ssp.py`: `bind_parameters()`
+- `src/pyssp_standard/ssd.py`: `target()`, `bind_parameters()`
+- `src/pyssp_standard/ssp.py`: `bind_parameters()`
 - `standard/ssp1/operations/ssp_binding.py`, `ssd_binding.py`
-- `pytest/ssp1/facade/test_ssd_bind.py`,
-  `pytest/ssp1/orchestration/test_ssp_bind.py`
+- `tests/ssp1/facade/test_ssd_bind.py`,
+  `tests/ssp1/orchestration/test_ssp_bind.py`

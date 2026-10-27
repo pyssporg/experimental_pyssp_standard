@@ -36,7 +36,7 @@ status: current
 |----|-----------|-------------|
 | AC-009 | `.ssp` archives and directories shall produce equivalent API behavior | `SSP` facade tests with both fixture types |
 | AC-010 | Archive-backed SSPs shall use a temporary directory cleaned up on context exit | Archive runtime tests |
-| AC-011 | Adding and removing resources in an SSP shall work in both archive and directory modes | `pytest/ssp1/orchestration/test_ssp.py` |
+| AC-011 | Adding and removing resources in an SSP shall work in both archive and directory modes | `tests/ssp1/orchestration/test_ssp.py` |
 
 ### Cross-Document Resolution
 
@@ -61,14 +61,14 @@ status: current
 |----|-----------|-------------|
 | AC-019 | FMU access shall expose binaries, documentation, and modelDescription | FMU archive tests |
 | AC-020 | Archive-backed and directory-backed FMU access shall be equivalent | Both fixture types tested |
-| AC-021 | Attaching an FMU to an existing component shall validate connectors, connector kinds, and implementation, then update the component source | `pytest/ssp1/orchestration/test_ssp_attach_fmu.py` |
+| AC-021 | Attaching an FMU to an existing component shall validate connectors, connector kinds, and implementation, then update the component source | `tests/ssp1/orchestration/test_ssp_attach_fmu.py` |
 
 ### Deterministic Builds {#nfr-001}
 
 | ID | Criterion | Verification |
 |----|-----------|-------------|
-| AC-DET-001 | Two `FMU.create()` calls with identical model description, binaries, and resources, using `fixed_timestamp=FMI_EPOCH`, produce identical SHA256 hashes | `pytest/fmi2/archive/test_fmu.py::test_fmu_create_deterministic` |
-| AC-DET-002 | Two `SSP.__init__(path, mode="w")` contexts with identical FMU additions produce identical SHA256 hashes | `pytest/ssp1/archive/test_ssp_deterministic.py::test_ssp_create_deterministic` |
-| AC-DET-003 | Two `FMU.package_as_ssp()` calls with the same FMU produce identical SHA256 hashes | `pytest/fmi2/archive/test_fmu_package_deterministic.py::test_fmu_package_as_ssp_deterministic` |
-| AC-DET-004 | Two SSP archives adding the same resource file produce identical SHA256 hashes | `pytest/ssp1/archive/test_ssp_deterministic.py::test_ssp_add_resource_deterministic` |
-| AC-DET-005 | XML documents created without calling `set_generation_date_and_time()` do not include a varying `generationDateAndTime` attribute; calling `set_generation_date_and_time(None)` always serializes `"2000-01-01T00:00:00Z"` | `pytest/common/test_generation_datetime_stability.py` (guardrail); `pytest/common/test_generation_date_time.py` (setter) |
+| AC-DET-001 | Two `FMU.create()` calls with identical model description, binaries, and resources, using `fixed_timestamp=FMI_EPOCH`, produce identical SHA256 hashes | `tests/fmi2/archive/test_fmu.py::test_fmu_create_deterministic` |
+| AC-DET-002 | Two `SSP.__init__(path, mode="w")` contexts with identical FMU additions produce identical SHA256 hashes | `tests/ssp1/archive/test_ssp_deterministic.py::test_ssp_create_deterministic` |
+| AC-DET-003 | Two `FMU.package_as_ssp()` calls with the same FMU produce identical SHA256 hashes | `tests/fmi2/archive/test_fmu_package_deterministic.py::test_fmu_package_as_ssp_deterministic` |
+| AC-DET-004 | Two SSP archives adding the same resource file produce identical SHA256 hashes | `tests/ssp1/archive/test_ssp_deterministic.py::test_ssp_add_resource_deterministic` |
+| AC-DET-005 | XML documents created without calling `set_generation_date_and_time()` do not include a varying `generationDateAndTime` attribute; calling `set_generation_date_and_time(None)` always serializes `"2000-01-01T00:00:00Z"` | `tests/common/test_generation_datetime_stability.py` (guardrail); `tests/common/test_generation_date_time.py` (setter) |

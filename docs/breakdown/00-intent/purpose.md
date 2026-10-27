@@ -61,6 +61,6 @@ XML parsing from domain logic.
 
 - `README.md`: "a Python package for inspecting and editing SSP-related files"
 - `02-architecture/layer-rules.md`: layered XML-document workflow
-- `pyssp_standard/__init__.py`: public facades, model types, and the
+- `src/pyssp_standard/__init__.py`: public facades, model types, and the
   parameter-set/mapping contract in the exported surface
 - `04-verification/acceptance-criteria.md`: behavioral requirements baseline

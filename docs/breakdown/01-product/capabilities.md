@@ -38,6 +38,6 @@ status: current
 
 ## Evidence
 
-- `pyssp_standard/__init__.py`: full public API surface
-- All facade modules under `pyssp_standard/`: thin wrappers over shared behavior
+- `src/pyssp_standard/__init__.py`: full public API surface
+- All facade modules under `src/pyssp_standard/`: thin wrappers over shared behavior
 - `02-architecture/quality-attributes.md`: active vs. skeleton status

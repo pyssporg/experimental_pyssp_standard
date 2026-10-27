@@ -35,7 +35,7 @@ status: current
 |-------|-------------|-------------|
 | **SSP/FMI File System** | Source and destination for all artifact I/O | Read/write XML files, zip archives, directories |
 | **Python Caller** | CI scripts, higher-level tools, or interactive use | Imports `pyssp_standard`, uses context-managed facades |
-| **XSD Schema Files** | Vendored schema definitions for validation | Located at `pyssp_standard/schema/` |
+| **XSD Schema Files** | Vendored schema definitions for validation | Located at `src/pyssp_standard/schema/` |
 | **Standard Documents** | SSP1, FMI2, LS-REF specification documents | Reference only; not loaded at runtime |
 
 ## Boundaries
@@ -43,12 +43,12 @@ status: current
 - `pyssp_standard` is a **library**, not a service. It has no network interface,
   no server process, and no persistent state beyond the files it reads/writes.
 - All I/O is local filesystem. No HTTP, database, or message queue.
-- External schema files are vendored in-tree (`pyssp_standard/schema/`).
+- External schema files are vendored in-tree (`src/pyssp_standard/schema/`).
 - The library does not invoke FMU simulation or co-simulation.
 
 ## Evidence
 
 - `README.md`: package positioning
 - All facade modules: none use network or external service
-- `pyssp_standard/schema/`: vendored XSD files
+- `src/pyssp_standard/schema/`: vendored XSD files
 - `02-architecture/layer-rules.md`: purpose and boundaries

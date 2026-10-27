@@ -11,7 +11,7 @@ status: current
 
 ## Public API Surface
 
-`pyssp_standard/__init__.py` exports:
+`src/pyssp_standard/__init__.py` exports:
 
 ```python
 __all__ = [
@@ -92,7 +92,7 @@ class XmlDocument(Generic[DocumentT]):
 
 ## Evidence
 
-- `pyssp_standard/__init__.py`: exports
+- `src/pyssp_standard/__init__.py`: exports
 - Each facade module: constructor, `_create_document()`, `xml` property
 - `common/xml_document.py`: base class
 - `common/document_runtime.py`: generic orchestration

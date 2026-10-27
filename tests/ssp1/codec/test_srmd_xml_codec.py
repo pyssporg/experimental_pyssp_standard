@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from pyssp_standard.standard.ssp1.codec import Ssp1SrmdCodec
 
 
-def test_parses_reference_fixture():
-    fixture = Path("pytest/__fixture__/test_schema_validation.srmd")
+def test_parses_reference_fixture(fixture_dir):
+    fixture = fixture_dir / "test_schema_validation.srmd"
     document = Ssp1SrmdCodec().parse(fixture.read_text(encoding="utf-8"))
 
     assert document.version == "1.0.0-beta2"

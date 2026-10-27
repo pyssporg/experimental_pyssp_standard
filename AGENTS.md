@@ -34,8 +34,8 @@ and FMI artifacts: `.ssp`, `.ssd`, `.ssv`, `.ssm`, `.fmu`, and
 `modelDescription.xml`. It is a pre-processing and controlled-edit library, not
 a full authoring environment or a simulation runtime.
 
-- The public facades are listed in `pyssp_standard/__init__.py`; consumers use
-  those, not internal codecs or schema bindings.
+- The public facades are listed in `src/pyssp_standard/__init__.py`; consumers
+  use those, not internal codecs or schema bindings.
 - The package is layered: archive, codec, model, validation, orchestration, and
   public API each own one concern.
 
@@ -102,9 +102,9 @@ This is experimental software:
 - Use the repo-local `venv` when it exists. Prefer
   `. venv/bin/activate && <command>` over the system Python for `pytest`,
   `python -m ...`, and related tooling.
-- Tests: `pytest` (`pytest.ini` sets `testpaths = pytest`). Run a category with
-  `pytest pytest/ssp1/`, `pytest pytest/fmi2/`, `pytest pytest/ls_ref/`, or
-  `pytest pytest/tools/`.
+- Tests: `pytest` (config lives in `pyproject.toml` with `testpaths = tests`).
+  Run a category with `pytest tests/ssp1/`, `pytest tests/fmi2/`,
+  `pytest tests/ls_ref/`, or `pytest tests/tools/`.
 
 ## Reading scope
 
@@ -113,9 +113,9 @@ Keep repository context narrow. Do not scan the whole repo by default.
 After the vision, read in this order:
 
 - `docs/breakdown/03-implementation/code-structure.md`
-- `pyssp_standard/__init__.py`
-- the specific module under `pyssp_standard/` that matches the task
-- the smallest relevant test under `pytest/`
+- `src/pyssp_standard/__init__.py`
+- the specific module under `src/pyssp_standard/` that matches the task
+- the smallest relevant test under `tests/`
 - `README.md` only for package positioning, not for implementation details
 
 Use `docs/breakdown/03-implementation/code-structure.md` for first-pass
@@ -124,8 +124,8 @@ when the task needs architectural background beyond the repo map.
 
 Default working set:
 
-- `pyssp_standard/`
-- `pytest/`
+- `src/pyssp_standard/`
+- `tests/`
 - `docs/` only when the task is documentation-related
 
 Avoid reading these paths unless the task explicitly requires them:
@@ -135,8 +135,8 @@ Avoid reading these paths unless the task explicitly requires them:
 - `.pytest_cache/`
 - `__pycache__/`
 - `3rdParty/`
-- `pytest/legacy_unsupported/`
-- `pyssp_standard/schema`
+- `tests/legacy_unsupported/`
+- `src/pyssp_standard/schema`
 - large binary or archive fixtures such as `*.fmu`, `*.ssp`, `*.zip`
 
 For tests, do not scan all fixtures up front. Open only the fixture files
@@ -144,8 +144,8 @@ referenced by the test you are editing.
 
 Search strategy:
 
-- Prefer targeted `rg` queries scoped to `pyssp_standard/` or a specific
-  `pytest/` file.
+- Prefer targeted `rg` queries scoped to `src/pyssp_standard/` or a specific
+  `tests/` file.
 - Prefer opening one file at a time over reading complete directories.
 - Do not read vendored standards or generated/cache content for general feature
   work.

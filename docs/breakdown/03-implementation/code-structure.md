@@ -9,11 +9,12 @@ status: current
 
 # Code Structure
 
-
 ## Package Layout
 
+Package sources live under `src/`; tests under `tests/` (see INFO-019).
+
 ```
-pyssp_standard/
+src/pyssp_standard/
 ├── __init__.py              # Public API exports + get_repo_root()
 ├── ssp.py                   # SSP archive facade (context-managed)
 ├── ssd.py                   # SSD facade

@@ -14,7 +14,7 @@ SCHEMA_DIRS = {
     "SSP-LS-Traceability": "3rdParty/ssp-ls-traceability",
 }
 
-LIB_SCHEMA_PATH = Path("pyssp_standard/schema")
+LIB_SCHEMA_PATH = Path("src/pyssp_standard/schema")
 
 def main():
     for name, source_dir in SCHEMA_DIRS.items():

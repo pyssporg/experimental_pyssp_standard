@@ -86,7 +86,7 @@ class Ssp1SsvValidator:
 | SSP1 operations | `standard/ssp1/operations/` |
 | Validation | `standard/ssp1/validation/`, `standard/fmi2/validation/` |
 | Shared XML helpers | `common/xml_document.py`, `standard/ssp1/codec/xml_utils.py` |
-| Test fixtures | `pytest/` and `models/ssp/` |
+| Test fixtures | `tests/` and `models/ssp/` |
 
 ### Where to Start for Specific Changes
 

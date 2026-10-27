@@ -29,7 +29,7 @@ dependencies = [
 dev = [
     "build",
     "myst-parser",
-    "pytest",
+    "pytest>=7",
     "sphinx",
     "sphinx-rtd-theme",
 ]
@@ -37,7 +37,11 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/pyssporg/experimental_pyssp_standard"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
 [tool.setuptools.packages.find]
+where = ["src"]
 include = [
     "pyssp_standard",
     "pyssp_standard.common*",
@@ -47,3 +51,15 @@ include = [
 
 [tool.setuptools.package-data]
 pyssp_standard = ["schema/**/*.xsd"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+norecursedirs = "3rdParty 3rd_party"
+markers = [
+    "codec: XML codec and parse/serialize layer tests",
+    "facade: public facade and document editing workflow tests",
+    "archive: archive and orchestration layer tests",
+    "tooling: tooling and version-routing tests",
+    "demo: architecture-review demo tests",
+]

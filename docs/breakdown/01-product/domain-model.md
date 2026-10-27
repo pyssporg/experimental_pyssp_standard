@@ -57,7 +57,7 @@ SSP Archive
 - The SSV and SSM models satisfy the public `ParameterSet` and `ParameterMapping`
   protocols structurally; the model modules do not import `parameters.py`.
 - Published model types are the version-neutral tree protocols in
-  `pyssp_standard/tree.py`: `Component`, `Connection`, `Connector`,
+  `src/pyssp_standard/tree.py`: `Component`, `Connection`, `Connector`,
   `DefaultExperiment`, `ParameterBinding`, `ParameterMappingReference`, and
   `System`. Consumers import them from `pyssp_standard` and construct documents
   only through facade methods; `pyssp_standard.standard.*` stays internal.

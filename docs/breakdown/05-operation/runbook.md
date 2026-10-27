@@ -34,10 +34,10 @@ Developers: use `pip install -e .` for editable install.
 pytest
 
 # Run specific test categories:
-pytest pytest/ssp1/         # SSP1 tests only
-pytest pytest/fmi2/         # FMI2 tests only
-pytest pytest/ls_ref/       # LS-REF tests only
-pytest pytest/tools/        # Tooling tests only
+pytest tests/ssp1/          # SSP1 tests only
+pytest tests/fmi2/          # FMI2 tests only
+pytest tests/ls_ref/        # LS-REF tests only
+pytest tests/tools/         # Tooling tests only
 
 # With markers (configured in conftest.py):
 pytest -m codec             # All codec tests
@@ -70,4 +70,4 @@ pytest -m tooling           # Tooling tests
 
 - `README.md`: install + quick start
 - `docs/getting_started.md`: user workflows
-- `pytest/conftest.py`: `pytest_collection_modifyitems` for marker configuration
+- `tests/conftest.py`: `pytest_collection_modifyitems` for marker configuration

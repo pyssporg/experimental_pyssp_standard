@@ -20,6 +20,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   FMU iteration over SSP components ships as an operations-layer function plus a thin SSP delegation method.
 - **DEC-002** — Reproducible archive builds · accepted · 2026-06-10 · `DEC-002`
   Archive creation is deterministic by default, using FMI_EPOCH timestamps, sorted entries, and ZIP_DEFLATED.
+- **DEC-003** — Source layout with src/ and tests/ · accepted · 2026-10-27 · `DEC-003`
+  Package sources live under src/pyssp_standard, tests under tests/, and the pytest configuration moves into pyproject.toml.
 - **IMD-001** — set_generation_date_and_time placement and scope · accepted · 2026-05-25 · `IMD-001`
   Each XML and archive facade sets generationDateAndTime itself, formatting through one shared utility.
 - **IMD-002** — Public parameter-set and parameter-mapping contract · accepted · 2026-10-27 · `IMD-002`
