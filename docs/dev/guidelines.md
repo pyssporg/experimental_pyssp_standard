@@ -10,8 +10,8 @@
 - **Pure call chains:** Avoid internal monkeypatches or shims.
 
 See also:
-- **Architecture separation-of-concerns rules:** `product-breakdown/02-architecture/layer-rules.md`
-- **Design constraints:** `product-breakdown/00-intent/constraints.md` (Separation of Concerns table)
+- **Architecture separation-of-concerns rules:** `docs/breakdown/02-architecture/layer-rules.md`
+- **Design constraints:** `docs/breakdown/00-intent/constraints.md` (Separation of Concerns table)
 
 ## Documentation Guidelines
 

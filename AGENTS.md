@@ -4,7 +4,7 @@
 
 Before you read code, edit files, or plan a change, read the project vision:
 
-**`product-breakdown/00-intent/purpose.md`**
+**`docs/breakdown/00-intent/purpose.md`**
 
 It states why this library exists, what it commits to, and what it refuses to
 become. `users.md` and `constraints.md` in the same folder carry the rest of the
@@ -41,7 +41,7 @@ a full authoring environment or a simulation runtime.
 
 ## Hard constraints
 
-- **Stay layered.** `product-breakdown/02-architecture/layer-rules.md` defines
+- **Stay layered.** `docs/breakdown/02-architecture/layer-rules.md` defines
   what each layer may and may not do; do not move work upward into a facade.
 - **The artifact is the preferred border.** When a Python object must cross,
   expose only a documented public facade or model type from the package public
@@ -68,7 +68,7 @@ This is experimental software:
 
 ## Conventions
 
-- `product-breakdown/` holds current state; keep it in step with the code.
+- `docs/breakdown/` holds current state; keep it in step with the code.
 - Keep docs short, focused, and single-purpose.
 - Prefer adding a new focused page over growing a mixed-purpose page.
 - Treat `README.md` as a landing page, not a full manual.
@@ -106,14 +106,14 @@ Keep repository context narrow. Do not scan the whole repo by default.
 
 After the vision, read in this order:
 
-- `product-breakdown/03-implementation/code-structure.md`
+- `docs/breakdown/03-implementation/code-structure.md`
 - `pyssp_standard/__init__.py`
 - the specific module under `pyssp_standard/` that matches the task
 - the smallest relevant test under `pytest/`
 - `README.md` only for package positioning, not for implementation details
 
-Use `product-breakdown/03-implementation/code-structure.md` for first-pass
-orientation. Open `product-breakdown/02-architecture/component-view.md` only
+Use `docs/breakdown/03-implementation/code-structure.md` for first-pass
+orientation. Open `docs/breakdown/02-architecture/component-view.md` only
 when the task needs architectural background beyond the repo map.
 
 Default working set:

@@ -54,9 +54,9 @@ with SSP("system.ssp", mode="r") as ssp:
 - [Getting started](docs/getting_started.md)
 - [Python API workflows](docs/user/python_api.md)
 - [Command reference](docs/command_reference.md)
-- [Product breakdown](product-breakdown/index.md) — architecture, capabilities, traceability
-- [Code structure](product-breakdown/03-implementation/code-structure.md)
-- [Quick code lookup](product-breakdown/03-implementation/interfaces.md)
+- [Product breakdown](docs/breakdown/README.md) — architecture, capabilities, traceability
+- [Code structure](docs/breakdown/03-implementation/code-structure.md)
+- [Quick code lookup](docs/breakdown/03-implementation/interfaces.md)
 
 ## Notes
 

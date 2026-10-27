@@ -11,6 +11,6 @@ source_suffix = {
 }
 
 master_doc = "index"
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "breakdown", "archive"]
 html_theme = "sphinx_rtd_theme"
 html_static_path = []
