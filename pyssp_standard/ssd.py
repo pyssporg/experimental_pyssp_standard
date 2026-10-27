@@ -71,6 +71,9 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
     ) -> None:
         """Extend inline parameter sets for components by component name.
 
+        Low-level helper: it extends existing inline sets rather than adding new
+        bindings. ``SSP.bind_parameters`` is the assembly entry point.
+
         Example:
             ssd.extend_component_parameterset({
                 "controller": {"gain": 2.0, "enabled": True},
@@ -100,6 +103,9 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
         mapping_source: str | None = None,
     ) -> None:
         """Extend the top-level system's inline parameter set.
+
+        Low-level helper: it extends the existing inline set rather than adding
+        a new binding. ``SSP.bind_parameters`` is the assembly entry point.
 
         Args:
             parameters: Parameter values, either a mapping of names to values or

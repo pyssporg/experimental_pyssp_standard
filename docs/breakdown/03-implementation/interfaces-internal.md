@@ -96,4 +96,5 @@ class Ssp1SsvValidator:
 | Cross-standard model conversion | `standard/operations/model_description_to_ssd.py` |
 | Standalone SSD document shape | `standard/ssp1/model/ssd_model.py`, `standard/ssp1/codec/ssd_codec.py` |
 | Parameter bindings or mappings | `standard/ssp1/operations/ssd_parameter_bindings.py` |
+| SSP-level parameter binding assembly | `standard/ssp1/operations/ssp_binding.py` |
 | SSP1-only system assembly | `standard/ssp1/operations/model_description_to_ssd.py` |

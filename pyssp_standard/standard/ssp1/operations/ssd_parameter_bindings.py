@@ -18,6 +18,11 @@ def extend_inline_parameter_binding(
     metadata: Ssp1DocumentMetadata | None = None,
     mapping_source: str | None = None,
 ) -> Ssd1ParameterBinding:
+    """Append parameters to the element's single inline set, creating it first.
+
+    Low-level helper: it extends an existing inline binding rather than adding
+    a new one. ``SSP.bind_parameters`` is the assembly entry point.
+    """
     parameter_set = get_or_create_inlined_parameter_set(
         bindings,
         binding_name=binding_name or default_name,
@@ -43,6 +48,11 @@ def get_or_create_inlined_parameter_set(
     version: str = "1.0",
     metadata: Ssp1DocumentMetadata | None = None,
 ) -> Ssp1ParameterSet:
+    """Return the element's inline parameter set, appending one when absent.
+
+    Low-level helper: the first inline binding (``source is None``) is reused;
+    a later call with a different name still extends that same set.
+    """
     binding = next(
         (
             existing
@@ -72,6 +82,11 @@ def add_external_parameterset(
     mapping_source: str | None = None,
     prefix: str | None = None,
 ) -> Ssd1ParameterBinding:
+    """Append an external parameter binding that references *source*.
+
+    Low-level helper: it only records the reference; placing the resource and
+    resolving the target belong to ``SSP.bind_parameters``.
+    """
     binding = Ssd1ParameterBinding(
         source=source,
         prefix=prefix,

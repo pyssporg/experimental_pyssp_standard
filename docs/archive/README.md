@@ -23,3 +23,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Consumers import pyssp_standard only through its top-level surface; the package publishes the SSD tree types and the concrete SSP1 parameter types.
 - **IMD-004** — Replace the SSP1 tree classes with protocols and facade construction · accepted · 2026-10-27 · `IMD-004`
   The public surface carries no SSP version token; the SSD tree is protocols and every document is built through facade methods.
+- **IMD-005** — Move SSP parameter-binding assembly behind SSP.bind_parameters · accepted · 2026-10-27 · `IMD-005`
+  The provider owns placement, target selection, resource naming, and mapping attach or resolve; the workflow keeps only its placement policy.

@@ -64,6 +64,7 @@ class Ssd1Component:
         prefix: str | None = None,
         version: str = "1.0",
         metadata: Ssp1DocumentMetadata | None = None,
+        mapping_source: str | None = None,
     ) -> "Ssd1ParameterBinding":
         from pyssp_standard.standard.ssp1.operations.ssd_parameter_bindings import (
             extend_inline_parameter_binding,
@@ -77,6 +78,7 @@ class Ssd1Component:
             prefix=prefix,
             version=version,
             metadata=metadata,
+            mapping_source=mapping_source,
         )
 
     def add_connector(

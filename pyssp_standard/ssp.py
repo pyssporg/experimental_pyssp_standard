@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import shutil
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from datetime import datetime
 from pathlib import Path
+from typing import Literal
 
 from pyssp_standard.standard.operations.model_description_to_ssd import (
     create_component_from_model_description,
@@ -13,7 +14,8 @@ from pyssp_standard.ls_ref import (
     LSRefExperiment,
     LSRefExperiments,
 )
-from pyssp_standard.standard.ssp1.model.ssd_model import Ssd1ParameterBinding
+from pyssp_standard.parameters import Parameter, ParameterMapping, ParameterSet
+from pyssp_standard.standard.ssp1.operations.ssp_binding import bind_parameters
 from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
     FmuEntry,
     iter_fmu_entries,
@@ -30,6 +32,7 @@ from pyssp_standard.common.archive_runtime import (
     create_runtime,
     ArchiveRuntime,
 )
+from pyssp_standard.tree import ParameterBinding
 
 
 class SSP:
@@ -74,6 +77,51 @@ class SSP:
             source_path, target_name=f"resources/{source_path.name}"
         ).removeprefix("resources/")
 
+    def bind_parameters(
+        self,
+        parameter_set: str | Path | ParameterSet | Mapping[str, Parameter],
+        *,
+        mapping: str | Path | ParameterMapping | None = None,
+        target: str | None = None,
+        placement: Literal["external", "inline"] = "external",
+        resolve_mapping: bool = False,
+        name: str | None = None,
+        prefix: str | None = None,
+    ) -> ParameterBinding:
+        """Bind one parameter set to a system or component and return the binding.
+
+        Args:
+            parameter_set: An ``.ssv`` path, an in-memory parameter set, or
+                already-resolved parameters keyed by name.
+            mapping: An ``.ssm`` path or an in-memory parameter mapping.
+            target: Dotted path to a nested system or component; ``None``
+                selects the root system.
+            placement: ``"external"`` places the set under ``resources/``;
+                ``"inline"`` embeds it in the SSD.
+            resolve_mapping: Rename parameters to their mapping targets and
+                drop the mapping instead of referencing it.
+            name: Parameter-set name; also names an external ``.ssv``
+                resource.
+            prefix: Consumer-interpreted prefix, written to the binding
+                verbatim.
+
+        Raises:
+            RuntimeError: When the session was opened read-only.
+            ValueError: On invalid arguments or a document without a system.
+            KeyError: When a target segment is unknown or ambiguous.
+            FileExistsError: When a resource name holds different bytes.
+        """
+        return bind_parameters(
+            self,
+            parameter_set,
+            mapping=mapping,
+            target=target,
+            placement=placement,
+            resolve_mapping=resolve_mapping,
+            name=name,
+            prefix=prefix,
+        )
+
     def add_external_parameterset(
         self,
         parameter_set_path: str | Path,
@@ -82,41 +130,35 @@ class SSP:
         resource_name: str | None = None,
         mapping_resource_name: str | None = None,
         prefix: str | None = None,
-    ) -> Ssd1ParameterBinding:
-        parameter_set_path = Path(parameter_set_path)
-        parameter_set_resource_name = (
-            self.add_resource(parameter_set_path)
-            if resource_name is None
-            else self.runtime.add_file(
-                parameter_set_path, target_name=f"resources/{resource_name}"
-            ).removeprefix("resources/")
-        )
+    ) -> ParameterBinding:
+        """Add an external parameter set, and optionally a mapping, to the root.
 
-        mapping_resource_name = (
-            None
-            if mapping_path is None
-            else (
-                self.add_resource(mapping_path)
-                if mapping_resource_name is None
-                else self.runtime.add_file(
-                    Path(mapping_path),
-                    target_name=f"resources/{mapping_resource_name}",
-                ).removeprefix("resources/")
-            )
-        )
+        Compatibility entry point: ``resource_name`` maps to ``name`` and
+        ``mapping_resource_name`` stages the mapping under that resource name
+        before delegating to :meth:`bind_parameters`.
 
+        Raises:
+            FileNotFoundError: If a given path does not exist.
+            FileExistsError: When a resource name holds different bytes.
+        """
         with self.system_structure() as ssd:
             if ssd.system is None:
                 ssd.new_system(ssd.xml.name or "system")
-            return ssd.system.add_external_parameterset(
-                source=f"resources/{parameter_set_resource_name}",
-                mapping_source=(
-                    f"resources/{mapping_resource_name}"
-                    if mapping_resource_name is not None
-                    else None
-                ),
-                prefix=prefix,
+
+        if mapping_path is not None and mapping_resource_name is not None:
+            mapping_path = self.runtime.resolve(
+                self.runtime.add_file(
+                    Path(mapping_path),
+                    target_name=f"resources/{mapping_resource_name}",
+                )
             )
+
+        return self.bind_parameters(
+            parameter_set_path,
+            mapping=mapping_path,
+            name=resource_name,
+            prefix=prefix,
+        )
 
     def remove_resource(self, resource_name: str) -> None:
         self.runtime.remove_file(f"resources/{resource_name}")

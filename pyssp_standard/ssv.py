@@ -32,6 +32,11 @@ class SSV(XmlDocument[ParameterSet]):
             return Ssp2ParameterSet(name=self.path.stem or "parameters", version="2.0")
         return Ssp1ParameterSet(name=self.path.stem or "parameters", version="1.0")
 
+    @property
+    def name(self) -> str:
+        """Document name of the parameter set."""
+        return self.xml.name
+
     @classmethod
     def create_parameter_set(
         cls, name: str, *, version: str | None = None

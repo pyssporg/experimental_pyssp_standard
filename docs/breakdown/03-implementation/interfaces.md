@@ -71,6 +71,30 @@ parameter sets and parameter mappings:
 Models do not import `parameters.py`; only the facades, the package
 `__init__.py`, and consumers do.
 
+## Parameter Binding Assembly
+
+`SSP.bind_parameters()` composes one binding in an open session and returns it:
+
+| Input | `external` | `inline` |
+|---|---|---|
+| `.ssv` path | copy to `resources/<file>` | read and embed |
+| `ParameterSet` | serialize to `resources/<name>.ssv` | embed |
+| `Mapping[str, Parameter]` | serialize to `resources/parameters.ssv` | embed |
+
+`mapping=` attaches an SSM: a path is copied to `resources/`, an in-memory
+`ParameterMapping` becomes an inline reference. `resolve_mapping=True` instead
+renames the parameters to their mapping targets and drops the mapping. `target`
+selects the root system, a nested system, or a component by dotted name.
+`name` overrides the parameter-set name and the external file name; `prefix` is
+stored verbatim for consumers. A resource name holding different bytes raises
+`FileExistsError`; a read-mode session raises `RuntimeError`.
+
+Assembly lives in `standard/ssp1/operations/ssp_binding.py`; the facade only
+delegates. `SSP.add_external_parameterset()` is the compatibility entry point
+and delegates to the same implementation. `SSD.extend_system_parameterset` and
+`SSD.extend_component_parameterset` remain low-level helpers that extend an
+existing inline set.
+
 ## Facade Interface Pattern
 
 All document facades follow a common pattern via `XmlDocument[T]` base class:
