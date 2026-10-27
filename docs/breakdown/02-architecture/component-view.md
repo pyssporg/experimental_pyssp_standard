@@ -88,4 +88,4 @@ status: current
 - `02-architecture/layer-rules.md`: detailed layer responsibilities and rules
 - `02-architecture/quality-attributes.md`: current implementation state per layer
 - Directory structure of `standard/` families
-- `product-breakdown/06-evolution/improvement-backlog.md`: module tree
+- `docs/breakdown/06-evolution/improvement-backlog.md`: module tree

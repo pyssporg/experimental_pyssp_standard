@@ -31,7 +31,7 @@ best-effort basis.
 
 ## Versioning
 
-- No formal versioning or changelog yet (see `product-breakdown/decision-log.md`)
+- No formal versioning or changelog yet (see `docs/archive/README.md`)
 - API stability is not guaranteed; interfaces may change
 - `02-architecture/quality-attributes.md` tracks current implementation state
 - `03-implementation/code-structure.md`: "Interfaces do not need to be stable"

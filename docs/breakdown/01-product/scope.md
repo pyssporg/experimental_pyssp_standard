@@ -45,7 +45,7 @@ distinct layers to support reuse and testability.
 
 ## Evidence
 
-- `product-breakdown/index.md`: document types table with status
+- `docs/breakdown/index.md`: document types table with status
 - `pyssp_standard/__init__.py`: exported public surface
 - `02-architecture/quality-attributes.md`: layer status per standard family
 - `04-verification/acceptance-criteria.md`: scope paragraph

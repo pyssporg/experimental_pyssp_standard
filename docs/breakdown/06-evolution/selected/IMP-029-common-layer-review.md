@@ -358,7 +358,7 @@ The join with `*parts` on a `Path` object does not produce valid filesystem path
 | **F-005 evidence** | `reference_discovery.py:28-65` (full graph walk), `reference_discovery.py:36` (`id()`-based visited) |
 | **F-006 evidence** | `document_runtime.py:14-19` (`ExternalReferenceSpec`), `document_runtime.py:130-138` (`_get_attr`/`_set_attr` silent None) |
 | **F-007 evidence** | `xml_schema_validation.py:21-24` (eager parse), `xml_schema_validation.py:11-15` (`resolve_schema_path`) |
-| **Backlog** | `product-breakdown/06-evolution/improvement-backlog.md` — added IMP-029 entry |
+| **Backlog** | `docs/breakdown/06-evolution/improvement-backlog.md` — added IMP-029 entry |
 | **Existing resolved** | IMP-001/002/003 (DocumentRuntime consolidation, reference extraction, spec unification) — verified not re-reported |
 
 ---

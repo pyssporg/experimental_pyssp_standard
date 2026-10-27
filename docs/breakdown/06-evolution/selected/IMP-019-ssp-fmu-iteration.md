@@ -232,7 +232,7 @@ def iter_fmu_entries(
 
 ### Phase 4 — Decision record
 
-7. Create `product-breakdown/06-evolution/decisions/DEC-IMP019-R1-001.md` documenting the hybrid-API choice (standalone helper + thin SSP delegation) and the rationale for rejecting Options A (eager property) and B alone.
+7. Create `docs/breakdown/06-evolution/decisions/DEC-IMP019-R1-001.md` documenting the hybrid-API choice (standalone helper + thin SSP delegation) and the rationale for rejecting Options A (eager property) and B alone.
 
 ## Out Of Scope
 

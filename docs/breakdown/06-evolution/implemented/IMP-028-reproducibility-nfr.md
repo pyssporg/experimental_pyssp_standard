@@ -230,7 +230,7 @@ A document created without calling `set_generation_date_and_time()` must not inc
    - Add NFR-001 / QA-001 traceability chain
 
 ### Phase 4 — Decision record (recommended)
-8. Create `product-breakdown/06-evolution/decisions/DEC-IMP028-R1-001.md`:
+8. Create `docs/breakdown/06-evolution/decisions/DEC-IMP028-R1-001.md`:
    - Documents the choice of `FMI_EPOCH` as the canonical zero-timestamp default
    - Documents the reproducibility scope boundaries
    - Documents the acceptance criteria design
