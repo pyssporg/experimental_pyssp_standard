@@ -31,6 +31,11 @@ def _chmod_library_files(root_dir: Path) -> None:
 
 FMI_EPOCH = (2000, 1, 1, 0, 0, 0)
 
+#: File mode used for every non-library entry when a fixed timestamp is in
+#: effect.  Normalising the mode keeps archives deterministic across machines
+#: with different umasks; library entries get the executable bits added.
+DEFAULT_FILE_MODE = 0o644
+
 
 def _write_archive_file(
     archive: zipfile.ZipFile,
@@ -39,10 +44,16 @@ def _write_archive_file(
     date_time: tuple[int, ...] | None = None,
 ) -> None:
     info = zipfile.ZipInfo.from_file(path, arcname=arcname)
+    info.compress_type = zipfile.ZIP_DEFLATED
     if date_time is not None:
         info.date_time = date_time  # type: ignore[assignment]
-    info.compress_type = zipfile.ZIP_DEFLATED
-    if _is_library_path(arcname):
+        file_mode = (
+            _with_executable_bits(DEFAULT_FILE_MODE)
+            if _is_library_path(arcname)
+            else DEFAULT_FILE_MODE
+        )
+        info.external_attr = _zip_external_attr(file_mode)
+    elif _is_library_path(arcname):
         info.external_attr = _zip_external_attr(_with_executable_bits(path.stat().st_mode))
 
     with path.open("rb") as source:
@@ -176,7 +187,11 @@ def package_archive_directories(
     *,
     fixed_timestamp: tuple[int, int, int, int, int, int] | None = None,
 ) -> None:
-    """Package nested extracted archive directories deepest-first."""
+    """Package nested extracted archive directories deepest-first.
+
+    *fixed_timestamp* is forwarded to every nested archive; ``None`` inherits
+    the filesystem timestamps of the packaged files.
+    """
     source_dir = Path(source_dir)
     candidates = [
         (candidate, packaged_path)
@@ -198,15 +213,25 @@ def package_archive(
     *,
     recursive: bool = False,
     overwrite: bool = True,
-    fixed_timestamp: tuple[int, int, int, int, int, int] | None = None,
+    fixed_timestamp: tuple[int, int, int, int, int, int] | None = FMI_EPOCH,
 ) -> Path:
     """Package a directory as an SSP/FMU archive.
+
+    Archive entries are named by their path relative to *source_dir*, so the
+    output file name itself never appears as a member path.
 
     When ``recursive`` is enabled, extracted child archive directories are
     packaged deepest-first before the parent archive is written.
 
-    When ``fixed_timestamp`` is provided, all ZIP entries use the same
-    timestamp, enabling reproducible archive builds.
+    By default every ZIP entry is stamped with :data:`FMI_EPOCH`, the same
+    epoch the ``SSP`` and ``FMU`` facades use, and its mode is normalised
+    (``0o644``, plus the executable bits inside ``binaries/``). Two runs over
+    the same content therefore produce byte-identical archives regardless of
+    source mtimes or umask.
+
+    Pass ``fixed_timestamp=None`` to opt out of that normalisation and inherit
+    each file's filesystem mtime and mode instead. That is what byte-preserving
+    repackaging of an already-built archive needs, and it is not reproducible.
     """
     source_dir = Path(source_dir)
     archive_path = Path(archive_path)

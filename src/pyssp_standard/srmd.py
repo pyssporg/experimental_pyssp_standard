@@ -17,7 +17,11 @@ SimulationResourceMetaData = Ssp1SimulationResourceMetaData
 
 
 class SRMD(XmlDocument[Ssp1SimulationResourceMetaData]):
-    """Public SRMD facade following the layered SSP1 package layout."""
+    """Public SRMD facade following the layered SSP1 package layout.
+
+    A document created in write mode is named after ``Path.stem`` (default
+    ``"resource-meta-data"``); reading a file keeps the name stored in it.
+    """
 
     def __init__(self, path: str | Path, mode: str = "r"):
         super().__init__(path, mode)

@@ -11,6 +11,25 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = Path(__file__).resolve().parent / "__fixture__"
 EMBRACE_DIR = FIXTURE_DIR / "embrace"
 
+#: Determinism/stability suites are acceptance evidence: they assert the
+#: end-to-end reproducibility promise rather than one unit's behaviour.
+ACCEPTANCE_FILES = frozenset(
+    {
+        "test_archive_determinism.py",
+        "test_generation_datetime_stability.py",
+        "test_ssp_deterministic.py",
+        "test_fmu_package_deterministic.py",
+    }
+)
+
+#: Contract suites pin the public API surface, independently of one workflow.
+CONTRACT_FILES = frozenset(
+    {
+        "test_tree_contract.py",
+        "test_parameter_contract.py",
+    }
+)
+
 
 def _write_zip_from_tree(source_dir: Path, target_file: Path) -> Path:
     with zipfile.ZipFile(target_file, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -94,6 +113,28 @@ def fmu_archive_fixture(tmp_path_factory: pytest.TempPathFactory, fmu_directory_
     return _write_zip_from_tree(fmu_directory_fixture, tmp_path_factory.mktemp("fmu_archive") / "0001_ECS_HW.fmu")
 
 
+def _level_name(item) -> str:
+    """Return the single test level that owns *item*."""
+    name = item.path.name
+    if name in ACCEPTANCE_FILES:
+        return "acceptance"
+    if name in CONTRACT_FILES:
+        return "contract"
+
+    parts = item.path.parts
+    if "tools" in parts:
+        return "static"
+    if "archive" in parts:
+        return "acceptance"
+    if "orchestration" in parts:
+        return "system"
+    if {"operations", "validation", "common"} & set(parts):
+        return "unit"
+    if {"codec", "facade", "ls_ref"} & set(parts):
+        return "component"
+    return "static"
+
+
 def pytest_collection_modifyitems(config, items):
     path_markers = {
         "codec": pytest.mark.codec,
@@ -101,7 +142,18 @@ def pytest_collection_modifyitems(config, items):
         "archive": pytest.mark.archive,
         "orchestration": pytest.mark.archive,
         "tools": pytest.mark.tooling,
-        "demo": pytest.mark.demo,
+    }
+    level_markers = {
+        f"level_{name}": getattr(pytest.mark, f"level_{name}")
+        for name in (
+            "static",
+            "unit",
+            "component",
+            "contract",
+            "integration",
+            "system",
+            "acceptance",
+        )
     }
 
     for item in items:
@@ -109,3 +161,4 @@ def pytest_collection_modifyitems(config, items):
         for path_part, marker in path_markers.items():
             if path_part in parts:
                 item.add_marker(marker)
+        item.add_marker(level_markers[f"level_{_level_name(item)}"])

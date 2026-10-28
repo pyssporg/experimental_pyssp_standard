@@ -103,7 +103,8 @@ def create_runtime(
         path: Filesystem path to the SSP/FMU artefact.
         mode: Open mode (``"r"``, ``"w"``, ``"a"``).
         fixed_timestamp: Optional fixed timestamp for archive entries
-            (only meaningful for ``ArchiveRuntime``).
+            (only meaningful for ``ArchiveRuntime``). ``None`` inherits the
+            filesystem timestamps of the files being committed.
         runtime_type: ``"auto"`` (default), ``"directory"``, or ``"archive"``.
 
     Returns:

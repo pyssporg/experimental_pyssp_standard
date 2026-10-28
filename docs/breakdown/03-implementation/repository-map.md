@@ -30,7 +30,7 @@ tests/
 │   ├── codec/                     # LS-REF codec tests
 │   └── facade/                    # LS-REF facade tests
 ├── tools/                         # Schema target, validation, routing tests
-└── legacy_unsupported/            # Out-of-maintenance tests
+└── test_markers.py                # Level-marker coverage of the suite
 ```
 
 ### Documentation Structure

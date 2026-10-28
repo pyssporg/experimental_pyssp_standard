@@ -14,7 +14,11 @@ from pyssp_standard.standard.version_routing import get_codec_and_validator
 
 
 class SSV(XmlDocument[ParameterSet]):
-    """SSV (ParameterSet) facade — version-aware through version routing."""
+    """SSV (ParameterSet) facade — version-aware through version routing.
+
+    A document created in write mode is named after ``Path.stem`` (default
+    ``"parameters"``); reading a file keeps the name stored in it.
+    """
 
     def __init__(self, path: str | Path, mode: str = "r", version: str | None = None) -> None:
         super().__init__(path, mode)

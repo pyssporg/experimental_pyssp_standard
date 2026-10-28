@@ -36,6 +36,13 @@ from pyssp_standard.tree import ParameterBinding
 
 
 class SSP:
+    """SSP archive facade.
+
+    ``Path.stem`` supplies the default system name when a system structure is
+    created, and ``fixed_timestamp`` defaults to :data:`FMI_EPOCH` so repeated
+    packaging of the same content is byte-identical.
+    """
+
     def __init__(
         self,
         path: str | Path,

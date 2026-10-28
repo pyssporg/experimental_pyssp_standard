@@ -39,12 +39,19 @@ pytest tests/fmi2/          # FMI2 tests only
 pytest tests/ls_ref/        # LS-REF tests only
 pytest tests/tools/         # Tooling tests only
 
-# With markers (configured in conftest.py):
+# With markers (configured in tests/conftest.py):
 pytest -m codec             # All codec tests
 pytest -m facade            # All facade tests
 pytest -m archive           # All archive tests
-pytest -m demo              # Demo/test examples
 pytest -m tooling           # Tooling tests
+
+# Every test carries exactly one level marker:
+pytest -m level_static      # Surface, schema and public-export checks
+pytest -m level_unit        # Single-module behaviour
+pytest -m level_component   # Codec and facade behaviour over real documents
+pytest -m level_contract    # Pinned public API contracts
+pytest -m level_system      # Archive orchestration workflows
+pytest -m level_acceptance  # Reproducibility and compliance evidence
 ```
 
 ## Documentation

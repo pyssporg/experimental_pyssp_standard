@@ -233,3 +233,84 @@ def test_get_all_parameter_bindings_recursive():
     assert len(all_bindings) == 2
     prefixes = {b.prefix for b in all_bindings}
     assert prefixes == {"outer_", "inner_"}
+
+
+def test_round_trip_preserves_cross_file_system_element_reference():
+    """A System that references another SSD document keeps its element attribute."""
+    codec = Ssp1SsdCodec()
+    source = """<?xml version="1.0" encoding="UTF-8"?>
+<ssd:SystemStructureDescription
+  xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription"
+  name="CrossFile" version="1.0">
+  <ssd:System name="root">
+    <ssd:Elements>
+      <ssd:System name="referenced" element="system" />
+    </ssd:Elements>
+  </ssd:System>
+</ssd:SystemStructureDescription>
+"""
+
+    parsed = codec.parse(source)
+
+    assert parsed.system is not None
+    referenced = parsed.system.elements[0]
+    assert isinstance(referenced, Ssd1System)
+    assert referenced.element == "system"
+
+    serialized = codec.serialize(parsed)
+    assert '<ssd:System name="referenced" element="system"' in serialized
+
+    reparsed = codec.parse(serialized)
+
+    assert reparsed.system is not None
+    reparsed_reference = reparsed.system.elements[0]
+    assert isinstance(reparsed_reference, Ssd1System)
+    assert reparsed_reference.element == "system"
+
+
+UNKNOWN_CHILD_SSD = """<?xml version="1.0" encoding="UTF-8"?>
+<ssd:SystemStructureDescription
+  xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription"
+  xmlns:vendor="urn:vendor:extension"
+  name="Extensions" version="1.0">
+  <ssd:System name="root">
+    <ssd:Elements>
+      <ssd:Component name="Plant" source="resources/plant.fmu" />
+      <vendor:ElementGroup name="unmodelled" />
+    </ssd:Elements>
+    <vendor:Extra name="also-unmodelled" />
+  </ssd:System>
+  <vendor:Trailer />
+</ssd:SystemStructureDescription>
+"""
+
+
+def test_unmodelled_child_elements_are_silently_dropped():
+    """Decoder contract: unmodelled children are ignored, not preserved or raised.
+
+    The codec is a projection onto the SSP1 model; strictness is the job of the
+    validation layer (`Ssp1SsdValidator`), so unknown children are dropped on
+    parse and absent from the serialized document.
+    """
+    codec = Ssp1SsdCodec()
+    document = codec.parse(UNKNOWN_CHILD_SSD)
+
+    assert document.system is not None
+    assert [element.name for element in document.system.elements] == ["Plant"]
+
+    serialized = codec.serialize(document)
+
+    assert "vendor:" not in serialized
+    assert "unmodelled" not in serialized
+    assert "also-unmodelled" not in serialized
+
+
+def test_mixed_fixture_is_hand_authored_and_schema_valid(mixed_ssd_fixture):
+    """The fixture is authored by hand and validated against the SSP1 XSD."""
+    from pyssp_standard.standard.ssp1.validation.ssd_validation import (
+        Ssp1SsdSchemaValidator,
+    )
+
+    Ssp1SsdSchemaValidator().validate_xml(
+        mixed_ssd_fixture.read_text(encoding="utf-8")
+    )

@@ -1,24 +1,32 @@
-<ns0:SystemStructureDescription xmlns:ns0="http://ssp-standard.org/SSP1/SystemStructureDescription"
-  xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues"
-  name="MixedSSD" version="1.0" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription">
-  <ns0:System name="system">
-    <ns0:ParameterBindings>
-      <ns0:ParameterBinding prefix="Plant.">
-        <ns0:ParameterValues>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-authored SSP1 fixture: one system with two parameter bindings - an
+  inline ParameterValues set and an external source reference that the SSD
+  facade must preserve without resolving. Validated against
+  src/pyssp_standard/schema/SSP1/SystemStructureDescription.xsd.
+-->
+<ssd:SystemStructureDescription
+    xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription"
+    xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues"
+    name="MixedSSD" version="1.0">
+  <ssd:System name="system">
+    <ssd:ParameterBindings>
+      <ssd:ParameterBinding prefix="Plant">
+        <ssd:ParameterValues>
           <ssv:ParameterSet version="1.0" name="PlantInline">
             <ssv:Parameters>
               <ssv:Parameter name="gain">
-                <ssv:Real value="1.5" />
+                <ssv:Real value="1.5"/>
               </ssv:Parameter>
             </ssv:Parameters>
           </ssv:ParameterSet>
-        </ns0:ParameterValues>
-      </ns0:ParameterBinding>
-      <ns0:ParameterBinding prefix="Controller." source="external_values.ssv" />
-    </ns0:ParameterBindings>
-    <ns0:Elements>
-      <ns0:Component name="Plant" source="resources/plant.fmu" />
-      <ns0:Component name="Controller" source="resources/controller.fmu" />
-    </ns0:Elements>
-  </ns0:System>
-</ns0:SystemStructureDescription>
+        </ssd:ParameterValues>
+      </ssd:ParameterBinding>
+      <ssd:ParameterBinding prefix="Controller" source="external_values.ssv"/>
+    </ssd:ParameterBindings>
+    <ssd:Elements>
+      <ssd:Component name="Plant" source="resources/plant.fmu"/>
+      <ssd:Component name="Controller" source="resources/controller.fmu"/>
+    </ssd:Elements>
+  </ssd:System>
+</ssd:SystemStructureDescription>

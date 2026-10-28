@@ -34,6 +34,13 @@ from pyssp_standard.standard.ssp1.model.ssd_model import (
 
 
 class Ssp1SsdCodec:
+    """SSP1 SSD codec.
+
+    Parsing projects the XML onto the SSP1 model. Children the model does not
+    represent are dropped silently; schema strictness belongs to
+    ``Ssp1SsdValidator`` and is only applied on an explicit compliance check.
+    """
+
     def __init__(self):
         self._ssv_codec = Ssp1SsvCodec()
         self._ssm_codec = Ssp1SsmCodec()

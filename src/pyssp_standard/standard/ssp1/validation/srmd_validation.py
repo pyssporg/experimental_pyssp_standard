@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from pyssp_standard.common.xml_schema_validation import resolve_schema_path
 from pyssp_standard.standard.ssp1.codec.srmd_codec import NS_SRMD, NS_STC
 from pyssp_standard.standard.ssp1.codec.xml_utils import qname
 from pyssp_standard.standard.ssp1.model.srmd_model import Ssp1SimulationResourceMetaData
 
 
-DEFAULT_SSP1_SRMD_SCHEMA_PATH = resolve_schema_path("SSP-LS-Traceability", "SRMD.xsd")
-
-
 class Ssp1SrmdSchemaValidator:
-    def __init__(self, schema_path: Path | None = None):
-        self.schema_path = schema_path or DEFAULT_SSP1_SRMD_SCHEMA_PATH
+    """Structural check of an SRMD document.
+
+    The SRMD schema shipped under ``schema/SSP-LS-Traceability/SRMD.xsd`` cannot
+    be compiled offline: it (and ``STC.xsd``) imports
+    ``ssp-standard/schema/SystemStructureCommon.xsd``, a path that does not
+    exist in the vendored tree, plus a remote xlink schema. This validator
+    therefore checks the element structure the library models, using the same
+    ``ValueError`` contract as the XSD-backed validators.
+    """
 
     def validate_xml(self, xml_text: str) -> None:
         root = ET.fromstring(xml_text)

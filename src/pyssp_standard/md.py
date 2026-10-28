@@ -26,7 +26,12 @@ _ME_ONLY_CAPABILITY_FIELDS: frozenset[str] = frozenset(
 
 
 class ModelDescription(XmlDocument[Fmi2ModelDescriptionDocument | Fmi3ModelDescriptionDocument]):
-    """ModelDescription facade — version-aware through version routing."""
+    """ModelDescription facade — version-aware through version routing.
+
+    A document created in write mode takes ``modelName`` (and the FMI3
+    ``instantiationToken``) from ``Path.stem``; reading a file keeps the stored
+    values.
+    """
 
     def __init__(self, path: str | Path | None = None, mode: str = "r", version: str | None = None) -> None:
         super().__init__(path, mode)

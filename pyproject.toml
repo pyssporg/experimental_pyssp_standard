@@ -61,5 +61,12 @@ markers = [
     "facade: public facade and document editing workflow tests",
     "archive: archive and orchestration layer tests",
     "tooling: tooling and version-routing tests",
-    "demo: architecture-review demo tests",
+    "level_static: static surface, schema and public-export checks",
+    "level_unit: single-module behaviour (validators, operations, runtime helpers)",
+    "level_component: codec and facade behaviour over real documents",
+    "level_contract: pinned public API contracts",
+    "level_integration: several components cooperating",
+    "level_system: end-to-end archive orchestration workflows",
+    "level_acceptance: reproducibility and compliance acceptance evidence",
+    "slow: tests that are intentionally excluded from the default run",
 ]

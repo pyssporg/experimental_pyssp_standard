@@ -32,6 +32,9 @@ class SSD(XmlDocument[Ssd1SystemStructureDescription]):
 
     This facade is intentionally limited to SSD file/model operations.
     Cross-file dependency resolution belongs to the SSP archive layer.
+
+    A document created in write mode is named after ``Path.stem``; reading a
+    file keeps the name stored in it.
     """
 
     def __init__(self, path: str | Path, mode: str = "r"):

@@ -135,7 +135,6 @@ Avoid reading these paths unless the task explicitly requires them:
 - `.pytest_cache/`
 - `__pycache__/`
 - `3rdParty/`
-- `tests/legacy_unsupported/`
 - `src/pyssp_standard/schema`
 - large binary or archive fixtures such as `*.fmu`, `*.ssp`, `*.zip`
 
