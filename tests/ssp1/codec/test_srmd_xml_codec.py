@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from pyssp_standard.standard.ssp1.codec import Ssp1SrmdCodec
+from support.fixtures import SRMD
 
 
-def test_parses_reference_fixture(fixture_dir):
-    fixture = fixture_dir / "test_schema_validation.srmd"
-    document = Ssp1SrmdCodec().parse(fixture.read_text(encoding="utf-8"))
+def test_parses_reference_fixture():
+    document = Ssp1SrmdCodec().parse(SRMD.read_text(encoding="utf-8"))
 
     assert document.version == "1.0.0-beta2"
     assert document.name == "Stimuli Meta-Data"

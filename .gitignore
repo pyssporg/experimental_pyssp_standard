@@ -1,7 +1,7 @@
 .opencode/
 opencode.json
 
-tests/__fixture__/dcmotor/
+tests/fixtures/dcmotor/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

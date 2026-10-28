@@ -54,8 +54,13 @@ status: current
 - Shared fixtures in `tests/conftest.py`: embrace_ssd_fixture, embrace_ssm_fixture,
   embrace_ssp_dir_fixture, embrace_ssp_fixture, embrace_ssp_archive_fixture,
   mixed_ssd_fixture, external_ssv_fixture, ssv2_fixture,
-  model_description_fixture, fmu_directory_fixture, fmu_archive_fixture
-- Fixture source data: `tests/__fixture__/embrace/`
+  model_description_fixture, fmu_directory_fixture, fmu_archive_fixture,
+  fmu_with_binary_archive_fixture
+- Fixture source data: `tests/fixtures/embrace/`; every other case lives under
+  `tests/fixtures/<case>/` with a `case.md` recording its provenance, level and
+  oracle. `tests/test_fixture_policy.py` enforces that contract, and
+  `tests/test_level_table.py` asserts that every test file carries exactly one
+  explicit level from `FILE_LEVELS` in `tests/conftest.py`.
 
 ## Known Test Gaps
 

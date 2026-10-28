@@ -12,12 +12,21 @@ from pyssp_standard.fmu import FMU
 from pyssp_standard.ssp import SSP
 
 
-def test_archive_lists_binary_and_documentation_entries(fmu_archive_fixture, tmp_path):
+def test_archive_lists_binary_and_documentation_entries(fmu_with_binary_archive_fixture, tmp_path):
+    test_fmu_file = tmp_path / "ecs.fmu"
+    shutil.copy(fmu_with_binary_archive_fixture, test_fmu_file)
+
+    with FMU(test_fmu_file) as fmu:
+        assert fmu.binaries == ["binaries/linux64/plant.so"]
+        assert fmu.documentation == []
+
+
+def test_archive_lists_no_binaries_when_absent(fmu_archive_fixture, tmp_path):
     test_fmu_file = tmp_path / "ecs.fmu"
     shutil.copy(fmu_archive_fixture, test_fmu_file)
 
     with FMU(test_fmu_file) as fmu:
-        assert all(entry.startswith("binaries/") for entry in fmu.binaries)
+        assert fmu.binaries == []
         assert fmu.documentation == []
 
 

@@ -9,6 +9,7 @@ from pyssp_standard.standard.ssp1.validation.srmd_validation import (
     Ssp1SrmdSchemaValidator,
     Ssp1SrmdValidator,
 )
+from support.fixtures import SRMD
 
 NS_DECLS = (
     'xmlns:srmd="http://ssp-standard.org/SSPTraceability1/SimulationResourceMetaData" '
@@ -20,8 +21,8 @@ def _document(body: str = "", attributes: str = 'version="1.0.0" name="doc"') ->
     return f"<srmd:SimulationResourceMetaData {NS_DECLS} {attributes}>{body}</srmd:SimulationResourceMetaData>"
 
 
-def test_structural_validator_accepts_reference_fixture(fixture_dir):
-    xml_text = (fixture_dir / "test_schema_validation.srmd").read_text(encoding="utf-8")
+def test_structural_validator_accepts_reference_fixture():
+    xml_text = SRMD.read_text(encoding="utf-8")
     model = Ssp1SrmdCodec().parse(xml_text)
 
     assert Ssp1SrmdValidator().validate(model, xml_text) is None
