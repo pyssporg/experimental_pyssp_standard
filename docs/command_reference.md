@@ -65,5 +65,5 @@ After packaging changes, install the built wheel in a fresh environment and veri
 ```bash
 python -m venv /tmp/pyssp_standard_install
 /tmp/pyssp_standard_install/bin/python -m pip install dist/pyssp_standard-0.8.2-py3-none-any.whl
-/tmp/pyssp_standard_install/bin/python -c "from pyssp_standard.fmu import FMU; from pyssp_standard import SSD, SSP, SSV"
+/tmp/pyssp_standard_install/bin/python -c "from pyssp_standard.facades.fmu import FMU; from pyssp_standard import SSD, SSP, SSV"
 ```

@@ -2,8 +2,8 @@
 
 Reads the ``.ssv``/``.ssm`` inputs, places external resources under
 ``resources/``, then delegates the document edit to
-:meth:`pyssp_standard.ssd.SSD.bind_parameters`. The public facade
-(:meth:`pyssp_standard.ssp.SSP.bind_parameters`) delegates here; policy such as
+:meth:`pyssp_standard.facades.ssd.SSD.bind_parameters`. The public facade
+(:meth:`pyssp_standard.facades.ssp.SSP.bind_parameters`) delegates here; policy such as
 one-root-binding rules stays with the caller.
 """
 
@@ -15,24 +15,24 @@ from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from pyssp_standard.parameters import (
+from pyssp_standard.contracts.parameters import (
     Parameter,
     ParameterMapping,
     ParameterSet,
     parameters_by_name,
     resolve_parameter_mapping,
 )
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1ParameterSet
 from pyssp_standard.standard.version_routing import (
     StandardVersion,
     get_codec_and_validator,
 )
-from pyssp_standard.tree import ParameterBinding
+from pyssp_standard.contracts.tree import ParameterBinding
 
 if TYPE_CHECKING:
-    from pyssp_standard.ssp import SSP
+    from pyssp_standard.facades.ssp import SSP
 
 _PLACEMENTS = ("external", "inline")
 

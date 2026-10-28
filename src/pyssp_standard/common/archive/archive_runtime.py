@@ -5,8 +5,8 @@ from pathlib import Path
 import tempfile
 import zipfile
 
-from pyssp_standard.common.archive import package_archive
-from pyssp_standard.common.directory_runtime import DirectoryRuntime
+from pyssp_standard.common.archive.archive import package_archive
+from pyssp_standard.common.archive.directory_runtime import DirectoryRuntime
 
 
 class ArchiveRuntime:

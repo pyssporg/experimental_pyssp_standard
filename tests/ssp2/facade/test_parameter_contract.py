@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from pyssp_standard import Parameter, ParameterSet
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp2.model.ssv_model import (
     Ssp2Parameter,
     Ssp2ParameterSet,

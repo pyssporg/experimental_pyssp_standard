@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from pyssp_standard.common.archive import (
+from pyssp_standard.common.archive.archive import (
     copy_resource_directory,
     package_archive,
     unpack_archive,

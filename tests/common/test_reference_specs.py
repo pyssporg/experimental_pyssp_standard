@@ -25,7 +25,7 @@ class _MockContextFacade:
 class TestExternalReferenceSpecValidation:
 
     def test_valid_spec_creates(self):
-        from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+        from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
         spec = ExternalReferenceSpec(
             owner_type=_ValidOwner,
@@ -37,7 +37,7 @@ class TestExternalReferenceSpecValidation:
         assert spec.source_attr == "source"
 
     def test_invalid_owner_type_raises(self):
-        from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+        from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
         with pytest.raises(TypeError, match="owner_type must be a class"):
             ExternalReferenceSpec(
@@ -48,7 +48,7 @@ class TestExternalReferenceSpecValidation:
             )
 
     def test_missing_source_attr_raises(self):
-        from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+        from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
         with pytest.raises(AttributeError, match="source_attr"):
             ExternalReferenceSpec(
@@ -59,7 +59,7 @@ class TestExternalReferenceSpecValidation:
             )
 
     def test_missing_document_attr_raises(self):
-        from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+        from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
         with pytest.raises(AttributeError, match="document_attr"):
             ExternalReferenceSpec(
@@ -70,7 +70,7 @@ class TestExternalReferenceSpecValidation:
             )
 
     def test_invalid_facade_type_raises(self):
-        from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+        from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
         with pytest.raises(TypeError, match="facade_type"):
             ExternalReferenceSpec(
@@ -81,7 +81,7 @@ class TestExternalReferenceSpecValidation:
             )
 
     def test_all_real_specs_pass_validation(self):
-        from pyssp_standard.common.reference_specs import EXTERNAL_REFERENCE_SPECS
+        from pyssp_standard.common.document.reference_specs import EXTERNAL_REFERENCE_SPECS
 
         for spec in EXTERNAL_REFERENCE_SPECS:
             assert spec.owner_type is not None

@@ -26,9 +26,15 @@ __all__ = [
 ]
 ```
 
+Module homes: facades live in `facades/` (for example
+`pyssp_standard.facades.ssp`), the version-neutral protocols in `contracts/`
+(`pyssp_standard.contracts.tree`, `pyssp_standard.contracts.parameters`).
+`facades/__init__.py` and `contracts/__init__.py` are docstring-only; import a
+concrete module or use the package surface.
+
 ## Tree Protocol
 
-`tree.py` publishes the version-neutral SSD tree as `@runtime_checkable`
+`contracts/tree.py` publishes the version-neutral SSD tree as `@runtime_checkable`
 protocols: `Connector`, `Connection`, `ParameterMappingReference`,
 `ParameterBinding`, `DefaultExperiment`, `Element`, `Component`, `System`;
 `Component` and `System` are mutually exclusive. Consumers annotate and
@@ -43,7 +49,7 @@ import the codec or the operation.
 
 ## Parameter Contract
 
-`parameters.py` is the version-neutral parameter surface:
+`contracts/parameters.py` is the version-neutral parameter surface:
 
 - Protocols `Parameter`, `ParameterSet`, `MappingEntry`, `ParameterMapping`,
   satisfied structurally by the SSP1 and SSP2 models, which never import it.
@@ -56,7 +62,7 @@ import the codec or the operation.
   delegate to the versioned model; `SSV.xml` is typed `ParameterSet`;
   `SSV.parameters_by_name()` works for SSP1 and SSP2.
 
-Models do not import `parameters.py`; only facades, `__init__.py`, and
+Models do not import `contracts/parameters.py`; only facades, `__init__.py`, and
 consumers do.
 
 ## Parameter Binding
@@ -94,6 +100,6 @@ class XmlDocument(Generic[DocumentT]):
 
 - `src/pyssp_standard/__init__.py`: exports
 - Each facade module: constructor, `_create_document()`, `xml` property
-- `common/xml_document.py`: base class
-- `common/document_runtime.py`: generic orchestration
-- `common/archive_runtime.py`: `create_runtime()` dispatch
+- `common/document/xml_document.py`: base class
+- `common/document/document_runtime.py`: generic orchestration
+- `common/archive/archive_runtime.py`: `create_runtime()` dispatch

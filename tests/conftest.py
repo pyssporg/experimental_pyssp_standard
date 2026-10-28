@@ -72,6 +72,7 @@ FILE_LEVELS = {
     "test_fixture_policy.py": "static",
     "test_level_table.py": "static",
     "test_markers.py": "static",
+    "test_module_layout.py": "static",
     "tools/test_public_surface.py": "static",
     "tools/test_schema_targets.py": "static",
     "tools/test_schema_validation.py": "static",

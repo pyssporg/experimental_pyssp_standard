@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator, Mapping
 from typing import Protocol, runtime_checkable
 
-from pyssp_standard.parameters import ParameterMapping, ParameterSet
+from pyssp_standard.contracts.parameters import ParameterMapping, ParameterSet
 
 
 @runtime_checkable

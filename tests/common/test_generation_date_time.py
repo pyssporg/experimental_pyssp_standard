@@ -9,15 +9,15 @@ import shutil
 import pytest
 
 from pyssp_standard.common.datetime_utils import format_generation_datetime
-from pyssp_standard.md import ModelDescription
-from pyssp_standard.ssb import SSB
-from pyssp_standard.ssd import SSD
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssp import SSP
-from pyssp_standard.ssv import SSV
-from pyssp_standard.srmd import SRMD
-from pyssp_standard.fmu import FMU
-from pyssp_standard.ls_ref import LSRefExperiments, LSRefManifest
+from pyssp_standard.facades.md import ModelDescription
+from pyssp_standard.facades.ssb import SSB
+from pyssp_standard.facades.ssd import SSD
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssp import SSP
+from pyssp_standard.facades.ssv import SSV
+from pyssp_standard.facades.srmd import SRMD
+from pyssp_standard.facades.fmu import FMU
+from pyssp_standard.facades.ls_ref import LSRefExperiments, LSRefManifest
 
 
 # ---------------------------------------------------------------------------

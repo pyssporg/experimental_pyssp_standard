@@ -59,8 +59,8 @@ Lists **all files** under `resources/` but provides **no correlation** to which 
 
 ### Runtime resolution works for both archive modes
 
-- `DirectoryRuntime.resolve(path)` — `self.root / Path(path)` (`pyssp_standard/common/directory_runtime.py`, lines 47–48)
-- `ArchiveRuntime.resolve(path)` — delegates to `_directory_runtime.resolve(path)` (`pyssp_standard/common/archive_runtime.py`, lines 53–54)
+- `DirectoryRuntime.resolve(path)` — `self.root / Path(path)` (`pyssp_standard/common/archive/directory_runtime.py`, lines 47–48)
+- `ArchiveRuntime.resolve(path)` — delegates to `_directory_runtime.resolve(path)` (`pyssp_standard/common/archive/archive_runtime.py`, lines 53–54)
 
 Both produce valid filesystem paths suitable for `FMU.__init__`.
 
@@ -76,7 +76,7 @@ class FMU:
         self.runtime = create_runtime(self.path, mode)
 ```
 
-`create_runtime()` (`pyssp_standard/common/archive_runtime.py`, lines 75–83) detects directory vs `.fmu` archive transparently.
+`create_runtime()` (`pyssp_standard/common/archive/archive_runtime.py`, lines 75–83) detects directory vs `.fmu` archive transparently.
 
 ### Existing operation-module pattern
 

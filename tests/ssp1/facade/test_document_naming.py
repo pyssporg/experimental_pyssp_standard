@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import zipfile
 
-from pyssp_standard.common.archive import package_archive
-from pyssp_standard.md import ModelDescription
-from pyssp_standard.srmd import SRMD
-from pyssp_standard.ssd import SSD
-from pyssp_standard.ssv import SSV
+from pyssp_standard.common.archive.archive import package_archive
+from pyssp_standard.facades.md import ModelDescription
+from pyssp_standard.facades.srmd import SRMD
+from pyssp_standard.facades.ssd import SSD
+from pyssp_standard.facades.ssv import SSV
 
 
 def _recorded_name(path):

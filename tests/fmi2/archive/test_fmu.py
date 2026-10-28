@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from pyssp_standard.common.archive import FMI_EPOCH
-from pyssp_standard.fmu import FMU
-from pyssp_standard.ssp import SSP
+from pyssp_standard.common.archive.archive import FMI_EPOCH
+from pyssp_standard.facades.fmu import FMU
+from pyssp_standard.facades.ssp import SSP
 
 
 def test_archive_lists_binary_and_documentation_entries(fmu_with_binary_archive_fixture, tmp_path):

@@ -39,11 +39,11 @@ class _MockFacade:
 
 def test_load_external_document_logs_on_failure(tmp_path, caplog):
     """_load_external_document logs a warning on load failure and returns None."""
-    from pyssp_standard.common.document_runtime import (
+    from pyssp_standard.common.document.document_runtime import (
         DocumentRuntime,
         ExternalReferenceSpec,
     )
-    from pyssp_standard.common.archive_runtime import DirectoryRuntime
+    from pyssp_standard.common.archive.archive_runtime import DirectoryRuntime
 
     # Create a directory runtime pointing at the temp directory
     runtime = DirectoryRuntime(tmp_path)

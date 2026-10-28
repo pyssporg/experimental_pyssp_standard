@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from pyssp_standard.md import ModelDescription
+from pyssp_standard.facades.md import ModelDescription
 from pyssp_standard.standard.fmi2.codec import Fmi2ModelDescriptionXmlCodec
 from pyssp_standard.standard.fmi2.model import (
     Fmi2ElementInfo,
@@ -125,7 +125,7 @@ def test_strip_model_exchange_codec_round_trip():
 
     me_xml = codec.serialize(doc)
 
-    from pyssp_standard.md import ModelDescription
+    from pyssp_standard.facades.md import ModelDescription
     with ModelDescription("model_description.xml") as md:
         md.from_xml(me_xml)
         md.strip_model_exchange()

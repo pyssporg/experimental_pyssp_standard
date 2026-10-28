@@ -1,21 +1,21 @@
 from pathlib import Path
 
-from pyssp_standard.common.archive import (
+from pyssp_standard.common.archive.archive import (
     copy_resource_directory,
     package_archive,
     unpack_archive,
 )
-from pyssp_standard.fmu import FMU
+from pyssp_standard.facades.fmu import FMU
 from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import FmuEntry
-from pyssp_standard.md import ModelDescription
-from pyssp_standard.ls_ref import LSRefExperiments, LSRefManifest, LS_REF_EXTRA_DIR
+from pyssp_standard.facades.md import ModelDescription
+from pyssp_standard.facades.ls_ref import LSRefExperiments, LSRefManifest, LS_REF_EXTRA_DIR
 from pyssp_standard.standard.ls_ref.model import (
     LSRefExperiment,
     LSRefExperimentResource,
 )
-from pyssp_standard.srmd import SRMD
-from pyssp_standard.ssb import SSB
-from pyssp_standard.parameters import (
+from pyssp_standard.facades.srmd import SRMD
+from pyssp_standard.facades.ssb import SSB
+from pyssp_standard.contracts.parameters import (
     MappingEntry,
     Parameter,
     ParameterMapping,
@@ -23,7 +23,7 @@ from pyssp_standard.parameters import (
     parameters_by_name,
     resolve_parameter_mapping,
 )
-from pyssp_standard.tree import (
+from pyssp_standard.contracts.tree import (
     Component,
     Connection,
     Connector,
@@ -32,10 +32,10 @@ from pyssp_standard.tree import (
     ParameterMappingReference,
     System,
 )
-from pyssp_standard.ssd import SSD
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssp import SSP
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssd import SSD
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssp import SSP
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp1.validation.ssd_fmu_validation import (
     validate_component_fmu,
 )

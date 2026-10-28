@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp1.codec import Ssp1SsbCodec, Ssp1SsvCodec
 
 

@@ -51,7 +51,7 @@ class TestModelDescriptionGenerationDatetimeStability:
         """A pre-existing MD doc opened in append mode must NOT auto-inject generationDateAndTime."""
         path = tmp_path / "md.xml"
         _write_minimal_md(path)
-        from pyssp_standard.md import ModelDescription
+        from pyssp_standard.facades.md import ModelDescription
 
         with ModelDescription(path, mode="a", version="2.0") as md:
             pass
@@ -67,7 +67,7 @@ class TestModelDescriptionGenerationDatetimeStability:
         path2 = tmp_path / "md2.xml"
         _write_minimal_md(path1)
         _write_minimal_md(path2)
-        from pyssp_standard.md import ModelDescription
+        from pyssp_standard.facades.md import ModelDescription
 
         with ModelDescription(path1, mode="a", version="2.0"):
             pass
@@ -81,7 +81,7 @@ class TestModelDescriptionGenerationDatetimeStability:
         path2 = tmp_path / "md2.xml"
         _write_minimal_md(path1)
         _write_minimal_md(path2)
-        from pyssp_standard.md import ModelDescription
+        from pyssp_standard.facades.md import ModelDescription
 
         with ModelDescription(path1, mode="a", version="2.0") as md:
             md.set_generation_date_and_time()
@@ -146,30 +146,30 @@ class BaseGenerationDatetimeStability:
 
 
 class TestSSDGenerationDatetimeStability(BaseGenerationDatetimeStability):
-    from pyssp_standard.ssd import SSD
+    from pyssp_standard.facades.ssd import SSD
 
     FACADE_CLASS = SSD
 
 
 class TestSSVGenerationDatetimeStability(BaseGenerationDatetimeStability):
-    from pyssp_standard.ssv import SSV
+    from pyssp_standard.facades.ssv import SSV
 
     FACADE_CLASS = SSV
 
 
 class TestSSMGenerationDatetimeStability(BaseGenerationDatetimeStability):
-    from pyssp_standard.ssm import SSM
+    from pyssp_standard.facades.ssm import SSM
 
     FACADE_CLASS = SSM
 
 
 class TestSRMDGenerationDatetimeStability(BaseGenerationDatetimeStability):
-    from pyssp_standard.srmd import SRMD
+    from pyssp_standard.facades.srmd import SRMD
 
     FACADE_CLASS = SRMD
 
 
 class TestSSBGenerationDatetimeStability(BaseGenerationDatetimeStability):
-    from pyssp_standard.ssb import SSB
+    from pyssp_standard.facades.ssb import SSB
 
     FACADE_CLASS = SSB

@@ -14,7 +14,7 @@ from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1Component,
     Ssd1System,
 )
-from pyssp_standard.common.directory_runtime import DirectoryRuntime
+from pyssp_standard.common.archive.directory_runtime import DirectoryRuntime
 
 
 @dataclass
@@ -32,7 +32,7 @@ class FmuEntry:
     resource_path: str
 
     def open_fmu(self, mode: str = "r") -> FMU:
-        """Open the FMU at *source* and return an :class:`~pyssp_standard.fmu.FMU` instance.
+        """Open the FMU at *source* and return an :class:`~pyssp_standard.facades.fmu.FMU` instance.
 
         The caller is responsible for the context-manager lifecycle::
 
@@ -43,9 +43,9 @@ class FmuEntry:
             mode: File access mode for the FMU (default ``"r"``).
 
         Returns:
-            An :class:`~pyssp_standard.fmu.FMU` instance wrapping *source*.
+            An :class:`~pyssp_standard.facades.fmu.FMU` instance wrapping *source*.
         """
-        from pyssp_standard.fmu import FMU
+        from pyssp_standard.facades.fmu import FMU
 
         return FMU(self.source, mode=mode)
 

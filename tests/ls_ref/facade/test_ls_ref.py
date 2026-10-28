@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pyssp_standard.ls_ref import LSRefExperiments, LSRefManifest
+from pyssp_standard.facades.ls_ref import LSRefExperiments, LSRefManifest
 
 
 def test_manifest_facade_round_trip(tmp_path):

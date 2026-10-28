@@ -14,7 +14,7 @@ import pytest
 
 def test_ssp_create_deterministic(fmu_archive_fixture, tmp_path):
     """AC-DET-002: Two SSP contexts with identical FMU additions produce identical SHA256."""
-    from pyssp_standard.ssp import SSP
+    from pyssp_standard.facades.ssp import SSP
 
     ssp_path1 = tmp_path / "det_1.ssp"
     ssp_path2 = tmp_path / "det_2.ssp"
@@ -32,7 +32,7 @@ def test_ssp_create_deterministic(fmu_archive_fixture, tmp_path):
 def test_ssp_add_resource_deterministic(tmp_path):
     """AC-DET-004: Two SSP archives adding the same resource produce identical SHA256."""
     import hashlib
-    from pyssp_standard.ssp import SSP
+    from pyssp_standard.facades.ssp import SSP
 
     resource_file = tmp_path / "data.txt"
     resource_file.write_text("deterministic content\n")

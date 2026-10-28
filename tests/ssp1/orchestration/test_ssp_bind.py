@@ -4,10 +4,10 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssp import SSP
-from pyssp_standard.ssv import SSV
-from pyssp_standard.tree import ParameterBinding
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssp import SSP
+from pyssp_standard.facades.ssv import SSV
+from pyssp_standard.contracts.tree import ParameterBinding
 
 
 def _new_ssp(root: Path) -> Path:

@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from pyssp_standard.common.xml_document import XmlDocument
+from pyssp_standard.common.document.xml_document import XmlDocument
 from pyssp_standard.standard.fmi2.model import Fmi2ModelDescriptionDocument
 from pyssp_standard.standard.fmi3.model import (
     Fmi3ModelDescriptionDocument,

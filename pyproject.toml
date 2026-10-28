@@ -44,6 +44,8 @@ package-dir = {"" = "src"}
 where = ["src"]
 include = [
     "pyssp_standard",
+    "pyssp_standard.facades*",
+    "pyssp_standard.contracts*",
     "pyssp_standard.common*",
     "pyssp_standard.standard*",
     "pyssp_standard.tools*",

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from pathlib import Path
 
-from pyssp_standard.common.xml_document import XmlDocument
+from pyssp_standard.common.document.xml_document import XmlDocument
 from pyssp_standard.standard.ls_ref.model import (
     LSRefExperiment,
     LSRefExperimentsDocument,

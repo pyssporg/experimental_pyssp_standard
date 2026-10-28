@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from pyssp_standard.srmd import ClassificationEntry, SRMD
+from pyssp_standard.facades.srmd import ClassificationEntry, SRMD
 from pyssp_standard.standard.ssp1.codec.srmd_codec import NS_SRMD, NS_STC, NS_XLINK
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation
 from support.fixtures import SRMD as SRMD_FIXTURE

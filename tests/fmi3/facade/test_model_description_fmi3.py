@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pyssp_standard.md import ModelDescription
+from pyssp_standard.facades.md import ModelDescription
 
 
 def test_create_fmi3_document_round_trip(tmp_path: Path):

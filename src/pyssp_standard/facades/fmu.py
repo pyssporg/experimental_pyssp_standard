@@ -3,10 +3,10 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from pyssp_standard.md import ModelDescription
-from pyssp_standard.common.archive import FMI_EPOCH
-from pyssp_standard.common.archive_runtime import create_runtime
-from pyssp_standard.ssp import SSP
+from pyssp_standard.common.archive.archive import FMI_EPOCH
+from pyssp_standard.common.archive.archive_runtime import create_runtime
+from pyssp_standard.facades.md import ModelDescription
+from pyssp_standard.facades.ssp import SSP
 
 
 class FMU:

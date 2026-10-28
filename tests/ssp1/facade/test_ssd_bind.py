@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 from pyssp_standard import SSD, SSM, SSV
-from pyssp_standard.parameters import ParameterSet
+from pyssp_standard.contracts.parameters import ParameterSet
 
 
 def _ssd(tmp_path: Path) -> Path:

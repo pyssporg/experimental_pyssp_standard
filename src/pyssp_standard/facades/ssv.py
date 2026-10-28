@@ -5,8 +5,8 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from pyssp_standard.common.xml_document import XmlDocument
-from pyssp_standard.parameters import Parameter, ParameterSet, parameters_by_name
+from pyssp_standard.common.document.xml_document import XmlDocument
+from pyssp_standard.contracts.parameters import Parameter, ParameterSet, parameters_by_name
 from pyssp_standard.standard.common.utils import infer_parameter_type_name
 from pyssp_standard.standard.ssp1.model.ssv_model import Ssp1ParameterSet
 from pyssp_standard.standard.ssp2.model.ssv_model import Ssp2ParameterSet

@@ -5,8 +5,8 @@ from typing import Any
 
 import pytest
 
-from pyssp_standard.common.document_runtime import ExternalReferenceSpec
-from pyssp_standard.common.reference_discovery import discover_external_references
+from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
+from pyssp_standard.common.document.reference_discovery import discover_external_references
 
 
 class _MockFacade:

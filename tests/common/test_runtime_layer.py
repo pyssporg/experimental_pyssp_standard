@@ -15,8 +15,8 @@ import pytest
 
 def test_archive_runtime_delegates_match_directory_runtime():
     """All DirectoryRuntime public methods have matching ArchiveRuntime delegates."""
-    from pyssp_standard.common.archive_runtime import ArchiveRuntime
-    from pyssp_standard.common.directory_runtime import DirectoryRuntime
+    from pyssp_standard.common.archive.archive_runtime import ArchiveRuntime
+    from pyssp_standard.common.archive.directory_runtime import DirectoryRuntime
 
     dir_methods = {
         name
@@ -45,7 +45,7 @@ def test_archive_runtime_delegates_match_directory_runtime():
 
 def test_create_runtime_explicit_directory(tmp_path):
     """runtime_type='directory' always returns DirectoryRuntime."""
-    from pyssp_standard.common.archive_runtime import (
+    from pyssp_standard.common.archive.archive_runtime import (
         ArchiveRuntime,
         DirectoryRuntime,
         create_runtime,
@@ -58,7 +58,7 @@ def test_create_runtime_explicit_directory(tmp_path):
 
 def test_create_runtime_explicit_archive(tmp_path):
     """runtime_type='archive' always returns ArchiveRuntime."""
-    from pyssp_standard.common.archive_runtime import (
+    from pyssp_standard.common.archive.archive_runtime import (
         ArchiveRuntime,
         DirectoryRuntime,
         create_runtime,
@@ -70,7 +70,7 @@ def test_create_runtime_explicit_archive(tmp_path):
 
 def test_create_runtime_auto_directory_existing(tmp_path):
     """Auto heuristic: existing directory → DirectoryRuntime."""
-    from pyssp_standard.common.archive_runtime import (
+    from pyssp_standard.common.archive.archive_runtime import (
         ArchiveRuntime,
         DirectoryRuntime,
         create_runtime,
@@ -84,7 +84,7 @@ def test_create_runtime_auto_directory_existing(tmp_path):
 
 def test_create_runtime_auto_archive_non_existent_ssp(tmp_path):
     """Auto heuristic: non-existent .fmu path → ArchiveRuntime."""
-    from pyssp_standard.common.archive_runtime import (
+    from pyssp_standard.common.archive.archive_runtime import (
         ArchiveRuntime,
         DirectoryRuntime,
         create_runtime,
@@ -96,7 +96,7 @@ def test_create_runtime_auto_archive_non_existent_ssp(tmp_path):
 
 def test_create_runtime_auto_non_existent_no_suffix(tmp_path):
     """Auto heuristic: non-existent path without known suffix → DirectoryRuntime."""
-    from pyssp_standard.common.archive_runtime import (
+    from pyssp_standard.common.archive.archive_runtime import (
         ArchiveRuntime,
         DirectoryRuntime,
         create_runtime,

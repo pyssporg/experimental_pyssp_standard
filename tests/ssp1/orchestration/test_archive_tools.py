@@ -3,7 +3,7 @@ from __future__ import annotations
 import shutil
 import zipfile
 
-from pyssp_standard.common.archive import package_archive, unpack_archive
+from pyssp_standard.common.archive.archive import package_archive, unpack_archive
 
 
 def test_package_archive_marks_library_files_executable(tmp_path):

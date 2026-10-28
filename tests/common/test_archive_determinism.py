@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from pyssp_standard.common.archive import FMI_EPOCH, package_archive
+from pyssp_standard.common.archive.archive import FMI_EPOCH, package_archive
 
 
 def _sha256(path: Path) -> str:

@@ -41,7 +41,7 @@ with SSV("parameters.ssv", "w") as ssv:
 Use `SSM` for parameter mappings.
 
 ```python
-from pyssp_standard.ssm import SSM, Ssp1Transformation
+from pyssp_standard.facades.ssm import SSM, Ssp1Transformation
 
 with SSM("mapping.ssm", "w") as ssm:
     ssm.xml.add_mapping("source", "target")

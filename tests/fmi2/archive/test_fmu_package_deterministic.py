@@ -17,7 +17,7 @@ def test_fmu_package_as_ssp_deterministic(fmu_archive_fixture, tmp_path):
     Both calls use the same FMU filename and SSP basename so that component_name,
     system_name, and resource names in the generated SSP are identical.
     """
-    from pyssp_standard.fmu import FMU
+    from pyssp_standard.facades.fmu import FMU
 
     # Copy the fixture to a consistent filename so the produced SSP is identical
     fmu_path = tmp_path / "controller.fmu"

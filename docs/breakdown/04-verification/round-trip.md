@@ -53,4 +53,4 @@ Examples of preserved ordering:
 
 - `04-verification/traceability-matrix.md`: requirement-to-test mapping
 - `tests/` test files: each test exercises one or more acceptance criteria
-- `common/xml_document.py`: lifecycle implementation
+- `common/document/xml_document.py`: lifecycle implementation

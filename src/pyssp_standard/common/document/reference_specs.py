@@ -6,9 +6,9 @@ are referenced by which model types (Ssd1ParameterBinding, etc.).
 
 from __future__ import annotations
 
-from pyssp_standard.common.document_runtime import ExternalReferenceSpec
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssv import SSV
+from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1ParameterBinding,
     Ssd1ParameterMappingReference,

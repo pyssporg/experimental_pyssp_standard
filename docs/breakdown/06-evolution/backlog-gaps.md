@@ -56,7 +56,7 @@ Candidates live in INFO-015; the package map lives in INFO-011.
    `DocumentRuntime[...]`.
 
 3. **Reference specs duplicated** — Resolved (IMP-003): `EXTERNAL_REFERENCE_SPECS`
-   moved to `common/reference_specs.py`.
+   moved to `common/document/reference_specs.py`.
 
 4. **SSP2/FMI3 skeletons** — Directory structure exists for SSP2 and FMI3
    but has no implementation. The version routing already references SSP2 SSV.

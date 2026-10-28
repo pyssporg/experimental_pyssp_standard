@@ -1,7 +1,7 @@
 """Parameter-binding editing for an SSD document.
 
 Resolves the target element and appends one binding to it. The public facade
-(:meth:`pyssp_standard.ssd.SSD.bind_parameters`) delegates here; placing
+(:meth:`pyssp_standard.facades.ssd.SSD.bind_parameters`) delegates here; placing
 external resources stays with the SSP archive layer.
 """
 
@@ -10,9 +10,9 @@ from __future__ import annotations
 import copy
 from collections.abc import Mapping
 
-from pyssp_standard.parameters import Parameter, ParameterMapping, ParameterSet
+from pyssp_standard.contracts.parameters import Parameter, ParameterMapping, ParameterSet
 from pyssp_standard.standard.ssp1.model.ssd_model import Ssp1ParameterSet, Ssd1System
-from pyssp_standard.tree import Component, Element, ParameterBinding, System
+from pyssp_standard.contracts.tree import Component, Element, ParameterBinding, System
 
 
 def resolve_target(system: System | None, target: str | None) -> System | Component:

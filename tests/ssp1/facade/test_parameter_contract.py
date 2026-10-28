@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 import pyssp_standard
-import pyssp_standard.ssd
+import pyssp_standard.facades.ssd
 from pyssp_standard import (
     MappingEntry,
     Parameter,
@@ -13,8 +13,8 @@ from pyssp_standard import (
     ParameterMapping,
     ParameterSet,
 )
-from pyssp_standard.ssm import SSM
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssm import SSM
+from pyssp_standard.facades.ssv import SSV
 from pyssp_standard.standard.ssp1.model.ssc_model import Ssp1Annotation
 from pyssp_standard.standard.ssp1.model.ssm_model import (
     Ssp1MappingEntry,
@@ -139,9 +139,9 @@ def test_public_imports_expose_version_neutral_contract():
     assert pyssp_standard.ParameterMapping is ParameterMapping
     assert pyssp_standard.ParameterMapping is not Ssp1ParameterMapping
     assert pyssp_standard.ParameterBinding is ParameterBinding
-    assert not hasattr(pyssp_standard.ssd, "ParameterBinding")
-    assert not hasattr(pyssp_standard.ssd, "Component")
-    assert not hasattr(pyssp_standard.ssd, "ParameterMapping")
+    assert not hasattr(pyssp_standard.facades.ssd, "ParameterBinding")
+    assert not hasattr(pyssp_standard.facades.ssd, "Component")
+    assert not hasattr(pyssp_standard.facades.ssd, "ParameterMapping")
 
     public_names = {"Parameter", "ParameterSet", "ParameterMapping", "MappingEntry", "ParameterBinding"}
     assert public_names <= set(pyssp_standard.__all__)

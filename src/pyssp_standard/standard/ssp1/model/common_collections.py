@@ -6,7 +6,7 @@ from pyssp_standard.standard.ssp1.model.ssc_model import (
     Ssp1EnumerationItem,
     Ssp1Unit,
 )
-from pyssp_standard.standard.unit_conversion import generate_base_unit
+from pyssp_standard.standard.common.unit_conversion import generate_base_unit
 
 
 def get_unit(units: list[Ssp1Unit], name: str) -> Ssp1Unit | None:

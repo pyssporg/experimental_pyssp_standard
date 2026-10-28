@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Any, Generic, TypeVar
 from xml.etree.ElementTree import ParseError
 
-from pyssp_standard.common.archive_runtime import DirectoryRuntime
-from pyssp_standard.common.reference_discovery import discover_external_references
+from pyssp_standard.common.archive.archive_runtime import DirectoryRuntime
+from pyssp_standard.common.document.reference_discovery import discover_external_references
 
 
 logger = logging.getLogger(__name__)

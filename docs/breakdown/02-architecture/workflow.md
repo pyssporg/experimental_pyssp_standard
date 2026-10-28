@@ -53,7 +53,8 @@ For a standalone `SSV` or `SSM`:
 | Standard-specific parse/serialize | `standard/<family>/<version>/codec/` |
 | Standard-specific validation | `standard/<family>/<version>/validation/` |
 | Cross-standard composition | `standard/operations/` |
-| User-facing wrapper behavior | Top-level facade modules (`ssv.py`, `ssp.py`, etc.) |
+| User-facing wrapper behavior | Facade modules (`facades/ssv.py`, `facades/ssp.py`, etc.) |
+| Version-neutral protocols | `contracts/` (`tree.py`, `parameters.py`) |
 
 ## Code Placement Checklist
 

@@ -28,7 +28,7 @@ class DocumentRuntime(Generic[FacadeT]):
 External references are declared as `ExternalReferenceSpec` tuples:
 
 ```python
-# In ssd.py:
+# In facades/ssd.py:
 EXTERNAL_REFERENCE_SPECS = (
     ExternalReferenceSpec(owner_type=Ssd1ParameterBinding,
                           source_attr="source",
@@ -78,21 +78,21 @@ class Ssp1SsvValidator:
 
 | Concern | Primary Code Home |
 |---------|-------------------|
-| Archive and directory runtimes | `common/archive_runtime.py`, `common/directory_runtime.py`, `common/document_runtime.py` |
-| Public facades | `ssp.py`, `ssd.py`, `ssm.py`, `ssv.py`, `fmu.py`, `md.py` |
+| Archive and directory runtimes | `common/archive/archive_runtime.py`, `common/archive/directory_runtime.py`, `common/document/document_runtime.py` |
+| Public facades | `facades/ssp.py`, `facades/ssd.py`, `facades/ssm.py`, `facades/ssv.py`, `facades/fmu.py`, `facades/md.py` |
 | Cross-standard composition | `standard/operations/model_description_to_ssd.py` |
 | SSP1 codecs | `standard/ssp1/codec/` |
 | SSP1 models | `standard/ssp1/model/` |
 | SSP1 operations | `standard/ssp1/operations/` |
 | Validation | `standard/ssp1/validation/`, `standard/fmi2/validation/` |
-| Shared XML helpers | `common/xml_document.py`, `standard/ssp1/codec/xml_utils.py` |
+| Shared XML helpers | `common/document/xml_document.py`, `standard/ssp1/codec/xml_utils.py` |
 | Test fixtures | `tests/` and `models/ssp/` |
 
 ### Where to Start for Specific Changes
 
 | Change | Start At |
 |--------|----------|
-| Archive-aware `.ssp` workflows | `ssp.py`, `common/document_runtime.py` |
+| Archive-aware `.ssp` workflows | `facades/ssp.py`, `common/document/document_runtime.py` |
 | Cross-standard model conversion | `standard/operations/model_description_to_ssd.py` |
 | Standalone SSD document shape | `standard/ssp1/model/ssd_model.py`, `standard/ssp1/codec/ssd_codec.py` |
 | Parameter bindings or mappings | `standard/ssp1/operations/ssd_parameter_bindings.py` |

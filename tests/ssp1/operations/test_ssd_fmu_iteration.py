@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from pyssp_standard.fmu import FMU
-from pyssp_standard.common.directory_runtime import DirectoryRuntime
+from pyssp_standard.facades.fmu import FMU
+from pyssp_standard.common.archive.directory_runtime import DirectoryRuntime
 from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1Component,
     Ssd1System,
@@ -16,7 +16,7 @@ from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
     FmuEntry,
     iter_fmu_entries,
 )
-from pyssp_standard.ssp import SSP
+from pyssp_standard.facades.ssp import SSP
 
 
 # ---------------------------------------------------------------------------

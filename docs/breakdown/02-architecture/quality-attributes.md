@@ -19,7 +19,7 @@ status: current
 | **Reproducibility** {#qa-001} | Generated FMU/SSP artifacts are byte-identical from identical specification files and tool version | `04-verification/acceptance-criteria.md` — AC-DET-001–005 |
 | **Round-trip preservation** | Read-modify-write preserves element order, annotations, extensions | `04-verification/acceptance-criteria.md` — round-trip criteria |
 | **Library simplicity** | Minimal external dependencies, standard library for XML and archives | All codec modules use `xml.etree.ElementTree`, archive uses `zipfile` |
-| **Archive/directory transparency** | Same workflow for `.ssp` archives and unpacked directories | `common/archive_runtime.py`, `common/directory_runtime.py` share interface |
+| **Archive/directory transparency** | Same workflow for `.ssp` archives and unpacked directories | `common/archive/archive_runtime.py`, `common/archive/directory_runtime.py` share interface |
 
 ## Current Implementation Direction
 
@@ -54,6 +54,6 @@ The active implementation favors:
 | Tension | Description | Backlog Reference |
 |---------|-------------|-------------------|
 | **Sprawling runtimes** | `SsdRuntime` and `LSRefExperimentsRuntime` duplicate near-identical logic | `06-evolution/improvement-backlog.md` (G8, G12); `IMP-001` |
-| **Untestable reference discovery** | `_iter_external_reference_targets` is coupled to `DocumentRuntime` | `common/document_runtime.py` line 99 TODO; `IMP-002` |
+| **Untestable reference discovery** | `_iter_external_reference_targets` is coupled to `DocumentRuntime` | `common/document/document_runtime.py` line 99 TODO; `IMP-002` |
 | **Duplicated specs** | `EXTERNAL_REFERENCE_SPECS` local to `ssd.py` but needed by `document_runtime.py` | `06-evolution/improvement-backlog.md` (G9); `IMP-003` |
 | **Skeleton stacks** | SSP2 and FMI3 have empty codec/model/validation | `IMP-005`, `IMP-010` |

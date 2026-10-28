@@ -6,33 +6,33 @@ from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
-from pyssp_standard.standard.operations.model_description_to_ssd import (
-    create_component_from_model_description,
+from pyssp_standard.common.archive.archive import FMI_EPOCH, copy_resource_directory
+from pyssp_standard.common.archive.archive_runtime import (
+    ArchiveRuntime,
+    DirectoryRuntime,
+    create_runtime,
 )
-from pyssp_standard.ls_ref import (
+from pyssp_standard.common.document.document_runtime import DocumentRuntime
+from pyssp_standard.common.document.reference_specs import EXTERNAL_REFERENCE_SPECS
+from pyssp_standard.contracts.parameters import Parameter, ParameterMapping, ParameterSet
+from pyssp_standard.contracts.tree import ParameterBinding
+from pyssp_standard.facades.ls_ref import (
     LS_REF_EXTRA_DIR,
     LSRefExperiment,
     LSRefExperiments,
 )
-from pyssp_standard.parameters import Parameter, ParameterMapping, ParameterSet
-from pyssp_standard.standard.ssp1.operations.ssp_binding import bind_parameters
-from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
-    FmuEntry,
-    iter_fmu_entries,
+from pyssp_standard.facades.ssd import SSD
+from pyssp_standard.standard.operations.model_description_to_ssd import (
+    create_component_from_model_description,
 )
 from pyssp_standard.standard.ssp1.operations.model_description_to_ssd import (
     add_component_to_system_structure,
 )
-from pyssp_standard.ssd import SSD
-from pyssp_standard.common.document_runtime import DocumentRuntime
-from pyssp_standard.common.reference_specs import EXTERNAL_REFERENCE_SPECS
-from pyssp_standard.common.archive import FMI_EPOCH, copy_resource_directory
-from pyssp_standard.common.archive_runtime import (
-    DirectoryRuntime,
-    create_runtime,
-    ArchiveRuntime,
+from pyssp_standard.standard.ssp1.operations.ssd_fmu_iteration import (
+    FmuEntry,
+    iter_fmu_entries,
 )
-from pyssp_standard.tree import ParameterBinding
+from pyssp_standard.standard.ssp1.operations.ssp_binding import bind_parameters
 
 
 class SSP:
@@ -237,7 +237,7 @@ class SSP:
             FileExistsError: If *fmu_path* is a directory and the target
                 resource path already exists (via ``copy_resource_directory``).
         """
-        from pyssp_standard.fmu import FMU
+        from pyssp_standard.facades.fmu import FMU
 
         fmu_path = Path(fmu_path)
 
@@ -323,7 +323,7 @@ class SSP:
             ValueError: If the component is missing/ambiguous or the interface
                 does not match.
         """
-        from pyssp_standard.fmu import FMU
+        from pyssp_standard.facades.fmu import FMU
         from pyssp_standard.standard.ssp1.validation.ssd_fmu_validation import (
             validate_component_fmu,
         )
@@ -392,7 +392,7 @@ class SSP:
         Raises:
             ValueError: On the first interface mismatch.
         """
-        from pyssp_standard.fmu import FMU
+        from pyssp_standard.facades.fmu import FMU
         from pyssp_standard.standard.ssp1.validation.ssd_fmu_validation import (
             validate_component_fmu,
         )

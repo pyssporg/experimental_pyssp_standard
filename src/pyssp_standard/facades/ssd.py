@@ -4,22 +4,22 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from pyssp_standard.common.document.xml_document import XmlDocument
 from pyssp_standard.standard.ssp1.model.ssd_model import (
     Ssd1DefaultExperiment,
-    Ssd1SystemStructureDescription,
     Ssd1System,
+    Ssd1SystemStructureDescription,
 )
 from pyssp_standard.standard.ssp1.operations.ssd_binding import (
     append_binding,
     resolve_target,
 )
-from pyssp_standard.common.xml_document import XmlDocument
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from pyssp_standard.parameters import Parameter, ParameterMapping, ParameterSet
-    from pyssp_standard.tree import (
+    from pyssp_standard.contracts.parameters import Parameter, ParameterMapping, ParameterSet
+    from pyssp_standard.contracts.tree import (
         Component,
         DefaultExperiment,
         ParameterBinding,

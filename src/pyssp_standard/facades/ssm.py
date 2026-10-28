@@ -4,8 +4,8 @@ from collections.abc import Iterable, Mapping
 from datetime import datetime
 from pathlib import Path
 
-from pyssp_standard.common.xml_document import XmlDocument
-from pyssp_standard.parameters import (
+from pyssp_standard.common.document.xml_document import XmlDocument
+from pyssp_standard.contracts.parameters import (
     MappingEntry,
     Parameter,
     ParameterMapping,

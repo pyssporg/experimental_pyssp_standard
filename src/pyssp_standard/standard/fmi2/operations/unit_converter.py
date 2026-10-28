@@ -6,7 +6,7 @@ from pyssp_standard.standard.fmi2.model.model_description import (
     Fmi2ScalarVariable,
     Fmi2Unit,
 )
-from pyssp_standard.standard.unit_conversion import generate_base_unit
+from pyssp_standard.standard.common.unit_conversion import generate_base_unit
 
 
 class Fmi2UnitConverter:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from xml.etree import ElementTree as ET
 
-from pyssp_standard.ssb import SSB
+from pyssp_standard.facades.ssb import SSB
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation, Ssp1EnumerationItem
 
 

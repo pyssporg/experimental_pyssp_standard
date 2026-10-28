@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyssp_standard.common.document_runtime import ExternalReferenceSpec
+    from pyssp_standard.common.document.document_runtime import ExternalReferenceSpec
 
 
 def discover_external_references(

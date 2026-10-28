@@ -4,7 +4,7 @@ import pytest
 from xml.etree import ElementTree as ET
 
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation, Ssp1EnumerationItem, Ssp1Parameter
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssv import SSV
 
 
 def test_check_compliance_accepts_reference_fixture(external_ssv_fixture):

@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from pyssp_standard.ssm import SSM, Ssp1Transformation
+from pyssp_standard.facades.ssm import SSM, Ssp1Transformation
 from pyssp_standard.standard.ssp1.model import Ssp1Annotation, Ssp1Parameter
 from pyssp_standard.standard.ssp1.codec.ssm_codec import NS_SSC, NS_SSM
 

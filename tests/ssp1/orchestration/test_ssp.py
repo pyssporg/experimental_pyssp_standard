@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from pyssp_standard.fmu import FMU
-from pyssp_standard.ssd import SSD
-from pyssp_standard.ssp import SSP
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.fmu import FMU
+from pyssp_standard.facades.ssd import SSD
+from pyssp_standard.facades.ssp import SSP
+from pyssp_standard.facades.ssv import SSV
 from support.fixtures import EXTERNAL_SSV, MIXED_SSD, TEXT_PAYLOAD
 
 

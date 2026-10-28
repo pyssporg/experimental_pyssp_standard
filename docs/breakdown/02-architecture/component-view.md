@@ -16,15 +16,16 @@ status: current
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Public API Facades                          │
 │  SSP │ SSD │ SSV │ SSM │ FMU │ MD │ SRMD │ SSB │ LSRef*         │
-│  src/pyssp_standard/ssp.py, ssd.py, ssv.py, ssm.py, fmu.py, ... │
+│  src/pyssp_standard/facades/                                    │
+│  protocols: src/pyssp_standard/contracts/                       │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ depends on
 ┌──────────────────────────▼──────────────────────────────────────┐
 │                      Orchestration                              │
 │  DocumentRuntime │ ArchiveRuntimes │ DirectoryRuntimes          │
-│  src/pyssp_standard/common/document_runtime.py                  │
-│  src/pyssp_standard/common/archive_runtime.py                   │
-│  src/pyssp_standard/common/directory_runtime.py                 │
+│  src/pyssp_standard/common/document/document_runtime.py                  │
+│  src/pyssp_standard/common/archive/archive_runtime.py                   │
+│  src/pyssp_standard/common/archive/directory_runtime.py                 │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ dispatches
 ┌──────────────────────────▼──────────────────────────────────────┐
@@ -51,22 +52,24 @@ status: current
 
 | Component | Location | Responsibility |
 |-----------|----------|----------------|
-| **Public API Facades** | `src/pyssp_standard/*.py` (top-level) | Thin user-facing entry points, delegate to codec/model/validation |
-| **Orchestration** | `common/document_runtime.py` | Cross-file reference resolution, archive-aware sessions |
-| **Archive Layer** | `common/archive.py`, `archive_runtime.py`, `directory_runtime.py` | Zip unpack/repack, directory abstraction, context management |
+| **Public API Facades** | `facades/` | Thin user-facing entry points, delegate to codec/model/validation |
+| **Version-Neutral Contracts** | `contracts/tree.py`, `contracts/parameters.py` | Protocols facades and consumers share; no dependency on `standard/` |
+| **Orchestration** | `common/document/document_runtime.py` | Cross-file reference resolution, archive-aware sessions |
+| **Archive Layer** | `common/archive/archive.py`, `common/archive/archive_runtime.py`, `common/archive/directory_runtime.py` | Zip unpack/repack, directory abstraction, context management |
 | **Codec** | `standard/<family>/codec/` | XML parse/serialize per document type, standalone XML logic |
 | **Domain Model** | `standard/<family>/model/` | In-memory dataclass document shapes |
 | **Validation** | `standard/<family>/validation/` | Schema + semantic validation per document type |
 | **Version Routing** | `standard/version_routing.py` | Document-root detection, standard stack registry |
 | **Cross-Standard Ops** | `standard/operations/` | FMI→SSP composition and helpers |
 | **Schema Targets** | `tools/schema_targets.py` | XSD path registry for tooling |
-| **Shared XML** | `common/xml_document.py`, `standard/ssp1/codec/xml_utils.py` | Base XmlDocument facade, shared XML helpers |
+| **Shared XML** | `common/document/xml_document.py`, `standard/ssp1/codec/xml_utils.py` | Base XmlDocument facade, shared XML helpers |
 
 ## Dependencies Between Components
 
 | Dependent | Depends On | Nature |
 |-----------|-----------|--------|
-| Public Facades | Orchestration, Codec, Model, Validation | Direct instantiation (bypasses routing) |
+| Public Facades | Contracts, Orchestration, Codec, Model, Validation | Direct instantiation (bypasses routing) |
+| Version-Neutral Contracts | None (standard library only) | Protocols, no dependency on `standard/` |
 | Orchestration (DocumentRuntime) | Archive Layer, Codec, Model | Archive-aware resolution |
 | Codec | Model | Parse → model, Serialize ← model |
 | Validation | Model, Schema | Schema + semantic checks |

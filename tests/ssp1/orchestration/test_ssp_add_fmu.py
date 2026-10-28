@@ -5,7 +5,7 @@ import zipfile
 
 import pytest
 
-from pyssp_standard.ssp import SSP
+from pyssp_standard.facades.ssp import SSP
 
 
 def test_add_fmu_creates_component_and_top_level_connectors(fmu_archive_fixture, tmp_path):

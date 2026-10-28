@@ -6,7 +6,7 @@ import ast
 from pathlib import Path
 
 import pyssp_standard
-import pyssp_standard.tree as tree
+import pyssp_standard.contracts.tree as tree
 
 _VERSION_TOKENS = ("Ssp1", "Ssp2", "Ssd1", "Ssc1", "Ssm1")
 _TREE_NAMES = (
@@ -18,9 +18,10 @@ _TREE_NAMES = (
     "ParameterMappingReference",
     "System",
 )
+_CONTRACTS = Path(pyssp_standard.__file__).with_name("contracts")
 _PUBLIC_CONTRACT_MODULES = (
-    Path(pyssp_standard.__file__).with_name("tree.py"),
-    Path(pyssp_standard.__file__).with_name("parameters.py"),
+    _CONTRACTS / "tree.py",
+    _CONTRACTS / "parameters.py",
 )
 
 

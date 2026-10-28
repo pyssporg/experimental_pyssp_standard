@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from pyssp_standard.standard.ssp2.model.ssv_model import Ssp2Dimension
-from pyssp_standard.ssv import SSV
+from pyssp_standard.facades.ssv import SSV
 
 
 def test_read_ssp2_fixture_auto_detects_version(ssv2_fixture: Path):

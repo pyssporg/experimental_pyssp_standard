@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from pyssp_standard.md import ModelDescription
+from pyssp_standard.facades.md import ModelDescription
 from pyssp_standard.standard.fmi2.model import (
     Fmi2DefaultExperiment,
     Fmi2ModelStructure,

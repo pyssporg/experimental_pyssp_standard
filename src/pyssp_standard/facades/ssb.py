@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from pyssp_standard.common.xml_document import XmlDocument
+from pyssp_standard.common.document.xml_document import XmlDocument
 from pyssp_standard.standard.ssp1.model.ssb_model import Ssp1SignalDictionary
 
 
