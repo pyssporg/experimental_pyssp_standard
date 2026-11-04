@@ -3,9 +3,9 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyssp-standard"
+name = "experimental-pyssp-standard"
 version = "0.9.2.dev0"
-description = "Simple python package for reading, modifying and creating files, specified in the SSP Standard"
+description = "Simple python package for reading, modifying and creating files, specified in the SSP Standard (experimental fork)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
