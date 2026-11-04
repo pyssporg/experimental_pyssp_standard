@@ -39,6 +39,7 @@ Homepage = "https://github.com/pyssporg/experimental_pyssp_standard"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -52,7 +53,15 @@ include = [
 ]
 
 [tool.setuptools.package-data]
-pyssp_standard = ["schema/**/*.xsd"]
+# Schemas are loaded at runtime through `Path(__file__).parents[1] / "schema"`,
+# so every XSD must ship inside the wheel. Patterns are explicit per depth
+# because a `**` glob is not guaranteed to be expanded by every builder, and
+# the default `include-package-data` file list depends on the source state.
+pyssp_standard = [
+    "schema/*.xsd",
+    "schema/*/*.xsd",
+    "schema/*/*/*.xsd",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
