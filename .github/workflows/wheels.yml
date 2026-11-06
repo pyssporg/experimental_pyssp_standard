@@ -1,55 +1,85 @@
-# Build the distributable wheel, verify it carries every runtime XSD schema,
-# upload it as a workflow artifact, and attach it to the release on a tag push.
-# For more information see https://docs.github.com/actions
-
-name: Wheels
+name: wheels
 
 on:
   push:
-    branches: [ "main", "alpha", "architecture_review" ]
-    tags: [ "v*" ]
-  workflow_dispatch:
-
-permissions:
-  contents: write
+    branches: [alpha]
+    tags: ["v*"]
+  pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-    - name: Build wheel
-      run: |
-        python -m pip wheel --no-deps -w dist .
-    - name: Verify the wheel carries every schema
-      run: |
-        # The wheel is the installed artifact, so missing XSDs are a runtime failure.
-        src_count=$(find src -name '*.xsd' | wc -l)
-        whl_count=$(unzip -l dist/*.whl | grep -c '\.xsd$' || true)
-        echo "source XSDs: $src_count, wheel XSDs: $whl_count"
-        test "$src_count" -gt 0
-        test "$src_count" -eq "$whl_count"
-    - name: Upload wheel artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: wheel
-        path: dist/*.whl
-        if-no-files-found: error
-    - name: Attach wheel to release
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        # A tag push may not have a release yet; create it before attaching.
-        gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 \
-          || gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
-        gh release upload "${GITHUB_REF_NAME}" dist/*.whl --clobber
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip build
+          python -m pip install -e ".[dev]"
+
+      - name: Build wheel and sdist
+        run: python -m build --wheel --sdist
+
+      - name: Check artifacts
+        # The wheel is the installed artifact, so missing XSDs are a runtime
+        # failure: every source XSD must be inside the wheel.
+        run: |
+          python - <<'PY'
+          import pathlib
+          import zipfile
+
+          dist = pathlib.Path("dist")
+          wheels = sorted(dist.glob("*.whl"))
+          sdists = sorted(dist.glob("*.tar.gz"))
+          assert len(wheels) == 1, wheels
+          assert len(sdists) == 1, sdists
+          assert not any("0.0.0" in path.name for path in dist.iterdir()), list(dist.iterdir())
+
+          wheel = wheels[0]
+          version = wheel.name.split("-", 1)[1].split("-")[0]
+          sdist_version = sdists[0].name.removesuffix(".tar.gz").split("-", 1)[1]
+          assert version != "0.0.0", wheel.name
+          assert sdist_version == version, sdists[0].name
+
+          with zipfile.ZipFile(wheel) as zf:
+              assert zf.testzip() is None
+              metadata = next(
+                  name for name in zf.namelist()
+                  if name.endswith(".dist-info/METADATA")
+              )
+              text = zf.read(metadata).decode()
+              wheel_xsds = [name for name in zf.namelist() if name.endswith(".xsd")]
+
+          assert "Name: experimental-pyssp-standard" in text, text
+          assert f"Version: {version}" in text, text
+          print(wheel.name)
+
+          src_xsds = sorted(
+              str(path.relative_to("src"))
+              for path in pathlib.Path("src").rglob("*.xsd")
+          )
+          assert src_xsds, "no XSDs under src/"
+          assert sorted(wheel_xsds) == [f"pyssp_standard/{p}" for p in src_xsds], (
+              src_xsds, wheel_xsds
+          )
+          print(f"wheel carries {len(wheel_xsds)} XSDs matching src/")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          fail_on_unmatched_files: true
