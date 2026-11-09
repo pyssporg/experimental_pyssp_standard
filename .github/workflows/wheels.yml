@@ -66,7 +66,9 @@ jobs:
               for path in pathlib.Path("src").rglob("*.xsd")
           )
           assert src_xsds, "no XSDs under src/"
-          assert sorted(wheel_xsds) == [f"pyssp_standard/{p}" for p in src_xsds], (
+          # src_xsds are already "pyssp_standard/schema/..." paths; the wheel
+          # carries them at that same layout.
+          assert sorted(wheel_xsds) == sorted(src_xsds), (
               src_xsds, wheel_xsds
           )
           print(f"wheel carries {len(wheel_xsds)} XSDs matching src/")
