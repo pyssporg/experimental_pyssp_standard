@@ -1,3 +1,5 @@
+__version__ = "0.9.3.dev0"
+
 from pathlib import Path
 
 from pyssp_standard.common.archive.archive import (
