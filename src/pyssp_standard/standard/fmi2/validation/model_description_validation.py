@@ -34,6 +34,19 @@ class Fmi2ModelDescriptionSemanticValidator:
             if type_definition.type_name == "Enumeration" and not type_definition.enumeration_items:
                 raise ValueError(f"Enumeration type '{type_definition.name}' must define at least one Item")
 
+    def validate_binary(self, model: Fmi2ModelDescriptionDocument, binary_name: str) -> None:
+        if model.fmi_version != "2.0":
+            raise ValueError(
+                f"fmiVersion '{model.fmi_version}' is not a valid FMI 2.0 version"
+            )
+        if model.interface_type is None or model.capabilities is None:
+            raise ValueError("modelDescription must declare a valid FMI 2.0 interface")
+        if model.capabilities.model_identifier != Path(binary_name).stem:
+            raise ValueError(
+                f"modelIdentifier '{model.capabilities.model_identifier}' "
+                f"does not match binary '{binary_name}'"
+            )
+
 
 class Fmi2ModelDescriptionValidator:
     def __init__(

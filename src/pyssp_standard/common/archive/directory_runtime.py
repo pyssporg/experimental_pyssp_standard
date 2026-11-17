@@ -63,6 +63,8 @@ class DirectoryRuntime:
         target_path = self.resolve(archive_name)
         target_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_path, target_path)
+        if "binaries" in Path(archive_name).parts:
+            target_path.chmod(target_path.stat().st_mode | 0o111)
         return archive_name
 
     def remove_file(self, target_name: str) -> None:

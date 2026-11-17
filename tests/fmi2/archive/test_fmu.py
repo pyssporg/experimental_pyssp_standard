@@ -10,6 +10,12 @@ import pytest
 from pyssp_standard.common.archive.archive import FMI_EPOCH
 from pyssp_standard.facades.fmu import FMU
 from pyssp_standard.facades.ssp import SSP
+from pyssp_standard.standard.fmi2.codec.model_description_xml_codec import (
+    Fmi2ModelDescriptionXmlCodec,
+)
+from pyssp_standard.standard.fmi2.validation.model_description_validation import (
+    Fmi2ModelDescriptionSemanticValidator,
+)
 
 
 def test_archive_lists_binary_and_documentation_entries(fmu_with_binary_archive_fixture, tmp_path):
@@ -342,3 +348,291 @@ def test_fmu_create_deterministic(tmp_path):
     hash2 = hashlib.sha256(fmu_path2.read_bytes()).hexdigest()
 
     assert hash1 == hash2
+
+
+# --- add_sources / add_documentation tests ---
+
+
+def test_add_sources(tmp_path):
+    source_file = tmp_path / "model.c"
+    source_file.write_text("int main(void) { return 0; }\n")
+
+    fmu_path = tmp_path / "test.fmu"
+    with FMU(fmu_path, mode="w") as fmu:
+        result = fmu.add_sources(source_file)
+        assert result == "sources/model.c"
+        assert "sources/model.c" in fmu.runtime.namelist()
+
+
+def test_add_documentation_with_target_name(tmp_path):
+    doc_file = tmp_path / "readme.txt"
+    doc_file.write_text("documentation")
+
+    fmu_path = tmp_path / "test.fmu"
+    with FMU(fmu_path, mode="w") as fmu:
+        result = fmu.add_documentation(doc_file, target_name="guide.txt")
+        assert result == "documentation/guide.txt"
+        assert "documentation/guide.txt" in fmu.runtime.namelist()
+
+
+def test_fmu_create_with_sources_and_documentation(tmp_path):
+    md_file = tmp_path / "modelDescription.xml"
+    md_file.write_text(_MINIMAL_MD_XML)
+    source_file = tmp_path / "model.c"
+    source_file.write_text("int main(void) { return 0; }\n")
+    doc_file = tmp_path / "readme.txt"
+    doc_file.write_text("documentation")
+
+    fmu_path = tmp_path / "with_sources.fmu"
+    FMU.create(fmu_path, md_file, sources=[source_file], documentation=[doc_file])
+
+    with FMU(fmu_path, mode="r") as fmu:
+        assert "sources/model.c" in fmu.runtime.namelist()
+        assert "documentation/readme.txt" in fmu.runtime.namelist()
+
+
+def test_staged_directory_binary_has_executable_bit(tmp_path):
+    binary_file = tmp_path / "engine.so"
+    binary_file.write_text("binary content")
+
+    fmu_dir = tmp_path / "staged_fmu"
+    with FMU(fmu_dir, mode="w") as fmu:
+        fmu.add_binary(binary_file, platform="linux64")
+
+    staged_binary = fmu_dir / "binaries/linux64/engine.so"
+    assert staged_binary.stat().st_mode & 0o111
+
+
+def test_add_binary_rejects_unsafe_platform(tmp_path):
+    binary_file = tmp_path / "engine.so"
+    binary_file.write_text("binary content")
+
+    fmu_path = tmp_path / "test.fmu"
+    with FMU(fmu_path, mode="w") as fmu:
+        for platform in ("../evil", "linux/64"):
+            with pytest.raises(ValueError, match="platform") as excinfo:
+                fmu.add_binary(binary_file, platform=platform)
+            assert platform in str(excinfo.value)
+
+
+# --- validate_binary tests ---
+
+
+def _parse_minimal_model():
+    return Fmi2ModelDescriptionXmlCodec().parse(_MINIMAL_MD_XML)
+
+
+def test_validate_binary_accepts_matching_identifier():
+    Fmi2ModelDescriptionSemanticValidator().validate_binary(_parse_minimal_model(), "TestModel.so")
+
+
+def test_validate_binary_rejects_model_identifier_mismatch():
+    with pytest.raises(ValueError) as excinfo:
+        Fmi2ModelDescriptionSemanticValidator().validate_binary(_parse_minimal_model(), "Other.dll")
+    message = str(excinfo.value)
+    assert "modelIdentifier" in message
+    assert "Other.dll" in message
+
+
+def test_validate_binary_rejects_non_fmi2_version():
+    model = _parse_minimal_model()
+    model.fmi_version = "3.0"
+
+    with pytest.raises(ValueError) as excinfo:
+        Fmi2ModelDescriptionSemanticValidator().validate_binary(model, "TestModel")
+    message = str(excinfo.value)
+    assert "fmiVersion" in message
+    assert "valid FMI 2.0" in message
+
+
+def test_validate_binary_rejects_missing_interface():
+    model = _parse_minimal_model()
+    model.interface_type = None
+
+    with pytest.raises(ValueError, match="valid FMI 2.0"):
+        Fmi2ModelDescriptionSemanticValidator().validate_binary(model, "TestModel")
+
+
+# --- FMU.stage / FMU.package tests ---
+
+
+def _minimal_description(tmp_path, *, fmi_version="2.0", model_identifier="TestModel"):
+    xml = _MINIMAL_MD_XML.replace('fmiVersion="2.0"', f'fmiVersion="{fmi_version}"')
+    xml = xml.replace('modelIdentifier="TestModel"', f'modelIdentifier="{model_identifier}"')
+    path = tmp_path / "modelDescription.xml"
+    path.write_text(xml)
+    return path
+
+
+def _minimal_binary(tmp_path, name="TestModel.so"):
+    path = tmp_path / "build" / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("binary content")
+    return path
+
+
+def test_stage_writes_full_tree(tmp_path):
+    description = _minimal_description(tmp_path)
+    binary = _minimal_binary(tmp_path)
+
+    sources = tmp_path / "src"
+    sources.mkdir()
+    (sources / "model.c").write_text("int main(void) { return 0; }\n")
+
+    resources = tmp_path / "data"
+    (resources / "nested").mkdir(parents=True)
+    (resources / "a.csv").write_text("a,b\n1,2\n")
+    (resources / "nested" / "b.csv").write_text("b,c\n3,4\n")
+
+    documentation = tmp_path / "docs"
+    documentation.mkdir()
+    (documentation / "guide.txt").write_text("guide\n")
+
+    staged = FMU.stage(
+        tmp_path / "staged",
+        model_description=description,
+        binaries={"linux64": binary},
+        sources=[sources],
+        resources=[resources],
+        documentation=[documentation],
+        fmi_version="2.0",
+    )
+
+    assert staged == tmp_path / "staged"
+    assert (staged / "modelDescription.xml").is_file()
+    assert (staged / "binaries/linux64/TestModel.so").is_file()
+    assert (staged / "binaries/linux64/TestModel.so").stat().st_mode & 0o111
+    assert (staged / "sources/src/model.c").is_file()
+    assert (staged / "resources/data/a.csv").is_file()
+    assert (staged / "resources/data/nested/b.csv").is_file()
+    assert (staged / "documentation/docs/guide.txt").is_file()
+
+
+def test_stage_creates_no_optional_directories(tmp_path):
+    description = _minimal_description(tmp_path)
+
+    staged = FMU.stage(tmp_path / "staged", model_description=description)
+
+    for group in ("sources", "resources", "documentation"):
+        assert not (staged / group).exists()
+
+
+def test_stage_refuses_non_empty_directory_and_overwrite_clears_it(tmp_path):
+    description = _minimal_description(tmp_path)
+    staged = tmp_path / "staged"
+    staged.mkdir()
+    (staged / "stale.txt").write_text("stale")
+
+    with pytest.raises(FileExistsError) as excinfo:
+        FMU.stage(staged, model_description=description)
+
+    assert "overwrite=True" in str(excinfo.value)
+
+    result = FMU.stage(staged, model_description=description, overwrite=True)
+
+    assert result == staged
+    assert not (staged / "stale.txt").exists()
+    assert (staged / "modelDescription.xml").is_file()
+
+
+def test_stage_rejects_duplicate_resource_names(tmp_path):
+    description = _minimal_description(tmp_path)
+    first = tmp_path / "one" / "same.csv"
+    second = tmp_path / "two" / "same.csv"
+    first.parent.mkdir()
+    second.parent.mkdir()
+    first.write_text("first")
+    second.write_text("second")
+
+    with pytest.raises(ValueError) as excinfo:
+        FMU.stage(
+            tmp_path / "staged",
+            model_description=description,
+            resources=[first, second],
+        )
+
+    message = str(excinfo.value)
+    assert "duplicate resource name" in message
+    assert "resources/" in message
+
+
+def test_stage_rejects_identifier_mismatch(tmp_path):
+    description = _minimal_description(tmp_path)
+    binary = _minimal_binary(tmp_path, name="Other.so")
+
+    with pytest.raises(ValueError) as excinfo:
+        FMU.stage(
+            tmp_path / "staged",
+            model_description=description,
+            binaries={"linux64": binary},
+        )
+
+    assert "modelIdentifier" in str(excinfo.value)
+
+
+def test_stage_rejects_wrong_requested_version(tmp_path):
+    description = _minimal_description(tmp_path, fmi_version="1.0")
+
+    with pytest.raises(ValueError) as excinfo:
+        FMU.stage(tmp_path / "staged", model_description=description, fmi_version="2.0")
+
+    message = str(excinfo.value)
+    assert "fmiVersion" in message
+    assert "valid FMI 2.0" in message
+
+
+def test_stage_rejects_missing_description(tmp_path):
+    with pytest.raises(ValueError) as excinfo:
+        FMU.stage(tmp_path / "staged", model_description=tmp_path / "missing.xml")
+
+    assert "modelDescription" in str(excinfo.value)
+
+
+def test_package_writes_exact_staged_entries(tmp_path):
+    description = _minimal_description(tmp_path)
+    binary = _minimal_binary(tmp_path)
+    resource = tmp_path / "config.json"
+    resource.write_text('{"key": "value"}')
+
+    staged = FMU.stage(
+        tmp_path / "staged",
+        model_description=description,
+        binaries={"linux64": binary},
+        resources=[resource],
+    )
+    expected = sorted(
+        path.relative_to(staged).as_posix()
+        for path in staged.rglob("*")
+        if path.is_file()
+    )
+
+    archive = FMU.package(
+        tmp_path / "packaged.fmu",
+        model_description=description,
+        binaries={"linux64": binary},
+        resources=[resource],
+        stage_dir=tmp_path / "stage",
+    )
+
+    assert archive == tmp_path / "packaged.fmu"
+    with zipfile.ZipFile(archive) as bundle:
+        assert bundle.namelist() == expected
+
+
+def test_package_is_deterministic(tmp_path):
+    description = _minimal_description(tmp_path)
+    binary = _minimal_binary(tmp_path)
+    resource = tmp_path / "config.json"
+    resource.write_text('{"key": "value"}')
+    inputs = {
+        "model_description": description,
+        "binaries": {"linux64": binary},
+        "resources": [resource],
+    }
+
+    first = FMU.package(tmp_path / "first.fmu", **inputs)
+    second = FMU.package(tmp_path / "second.fmu", **inputs)
+
+    hash_first = hashlib.sha256(first.read_bytes()).hexdigest()
+    hash_second = hashlib.sha256(second.read_bytes()).hexdigest()
+    assert hash_first == hash_second

@@ -34,6 +34,7 @@ src/pyssp_standard/
 ├── common/                  # Plumbing shared by facades and layers
 │   ├── archive/             #   Package-container plumbing
 │   │   ├── archive.py       #     ZipFile unpack/repack
+│   │   ├── fmu_layout.py    #     Platform tokens and FMI group targets
 │   │   ├── archive_runtime.py   # Context-managed archive runtime + create_runtime()
 │   │   └── directory_runtime.py # Directory-based file runtime
 │   ├── document/            #   XML document plumbing

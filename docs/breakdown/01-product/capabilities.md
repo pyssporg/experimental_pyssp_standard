@@ -18,7 +18,7 @@ status: current
 | CAP-002 | Parameter set (SSV) | Read, create, edit, validate `.ssv` parameter sets with round-trip preservation | `facades/ssv.py`, `standard/ssp1/codec/ssv_codec.py`, `standard/ssp1/model/ssv_model.py` |
 | CAP-003 | Parameter mapping (SSM) | Read, create, edit, validate `.ssm` parameter mappings | `facades/ssm.py`, `standard/ssp1/codec/ssm_codec.py`, `standard/ssp1/model/ssm_model.py` |
 | CAP-004 | System structure (SSD) | Read, create, edit, validate `SystemStructure.ssd` including components, connectors, connections | `facades/ssd.py`, `standard/ssp1/codec/ssd_codec.py`, `standard/ssp1/model/ssd_model.py` |
-| CAP-005 | FMU archive access | Open `.fmu` archives, list binaries/documentation, access modelDescription.xml | `facades/fmu.py`, `facades/md.py` |
+| CAP-005 | FMU archive access | Open `.fmu` archives, list binaries/documentation, access modelDescription.xml, stage and package validated FMU trees | `facades/fmu.py` (`stage()`, `package()`), `facades/md.py` |
 | CAP-006 | Model description (FMI2) | Read/create/edit/validate FMI2 `modelDescription.xml` | `facades/md.py`, `standard/fmi2/codec/`, `standard/fmi2/model/` |
 | CAP-007 | Compliance validation | Explicit schema + semantic validation per document type | All `standard/*/validation/` modules, `common/xml_schema_validation.py` |
 | CAP-008 | Cross-document reference resolution | In archive-aware SSP sessions, resolve external `.ssv`/`.ssm` references, persist back on save | `common/document/document_runtime.py`, `facades/ssd.py` (EXTERNAL_REFERENCE_SPECS) |

@@ -35,4 +35,4 @@ status: current
 - `docs/user/python_api.md`: 7 example workflows
 - `src/pyssp_standard/facades/ssp.py`: `add_fmu()`, `add_resource()`, `system_structure()`
 - `src/pyssp_standard/facades/ssv.py`: read/create/edit SSV
-- `src/pyssp_standard/facades/fmu.py`: `package_as_ssp()`, `model_description`, `binaries`
+- `src/pyssp_standard/facades/fmu.py`: `stage()`, `package()`, `package_as_ssp()`, `add_binary()`, `add_sources()`, `add_resource()`, `add_documentation()`, `model_description`, `binaries`
