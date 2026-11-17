@@ -35,3 +35,10 @@ def test_interface_types_reads_fmi3_interface_elements(tmp_path: Path):
     path.write_text(_FMI3_CS_XML, encoding="utf-8")
     with ModelDescription(path) as md:
         assert md.interface_types == {"CoSimulation"}
+
+
+def test_variable_names_reads_fmi3_scalar_variables(tmp_path: Path):
+    path = tmp_path / "model_description.xml"
+    path.write_text(_FMI3_CS_XML, encoding="utf-8")
+    with ModelDescription(path) as md:
+        assert md.variable_names == frozenset({"y"})

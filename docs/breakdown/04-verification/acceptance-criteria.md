@@ -62,6 +62,7 @@ status: current
 | AC-019 | FMU access shall expose binaries, documentation, and modelDescription | FMU archive tests |
 | AC-020 | Archive-backed and directory-backed FMU access shall be equivalent | Both fixture types tested |
 | AC-021 | Attaching an FMU to an existing component shall validate connectors, connector kinds, and implementation, then update the component source | `tests/ssp1/orchestration/test_ssp_attach_fmu.py` |
+| AC-022 | FMU access shall expose the declared scalar-variable names of the model description, across FMI 2 and 3 | `tests/fmi2/archive/test_fmu.py`, md facade tests |
 
 ### Deterministic Builds {#nfr-001}
 

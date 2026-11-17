@@ -169,6 +169,9 @@ with FMU("controller.fmu", mode="w") as fmu:
 `md.interface_types` returns the FMI interfaces the model description offers
 (`ModelExchange`, `CoSimulation`, `ScheduledExecution`), across FMI 2 and 3.
 
+`md.variable_names` returns the declared scalar-variable names as a
+`frozenset`, across FMI 2 and 3.
+
 Use `ModelDescription` when you already have a direct path to `modelDescription.xml` and do not need FMU archive handling.
 
 ```python

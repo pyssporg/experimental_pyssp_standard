@@ -109,6 +109,20 @@ def test_archive_and_directory_modes_expose_same_model_name(fmu_archive_fixture,
     assert archive_name == directory_name
 
 
+def test_archive_and_directory_modes_expose_same_variable_names(fmu_archive_fixture, fmu_directory_fixture):
+    with FMU(fmu_archive_fixture, mode="r") as archive_fmu:
+        with archive_fmu.model_description as archive_md:
+            archive_names = archive_md.variable_names
+
+    with FMU(fmu_directory_fixture, mode="r") as directory_fmu:
+        with directory_fmu.model_description as directory_md:
+            directory_names = directory_md.variable_names
+
+    assert isinstance(archive_names, frozenset)
+    assert archive_names
+    assert archive_names == directory_names
+
+
 def test_fmu_create_empty_in_directory_mode(tmp_path):
     fmu_dir = tmp_path / "empty_fmu"
     with FMU(fmu_dir, mode="w") as fmu:

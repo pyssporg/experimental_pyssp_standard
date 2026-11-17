@@ -289,3 +289,28 @@ def test_interface_types_reports_cosimulation():
     with ModelDescription("model_description.xml") as md:
         md.from_xml(_CS_XML)
         assert md.interface_types == {"CoSimulation"}
+
+
+def test_variable_names_returns_declared_names_order_insensitive():
+    with ModelDescription("model_description.xml") as md:
+        md.from_xml(
+            """<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="Names" guid="{names-guid}">
+  <ModelVariables>
+    <ScalarVariable name="beta" valueReference="2"><Real/></ScalarVariable>
+    <ScalarVariable name="alpha" valueReference="1"><Real/></ScalarVariable>
+  </ModelVariables>
+</fmiModelDescription>"""
+        )
+        assert md.variable_names == frozenset({"alpha", "beta"})
+
+
+def test_variable_names_is_empty_when_no_variables_declared():
+    with ModelDescription("model_description.xml") as md:
+        md.from_xml(
+            """<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="Empty" guid="{empty-guid}">
+  <ModelVariables/>
+</fmiModelDescription>"""
+        )
+        assert md.variable_names == frozenset()

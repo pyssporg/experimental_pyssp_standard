@@ -67,6 +67,11 @@ class ModelDescription(XmlDocument[Fmi2ModelDescriptionDocument | Fmi3ModelDescr
         """FMI interface types this model description offers."""
         return _interface_types(self.xml)
 
+    @property
+    def variable_names(self) -> frozenset[str]:
+        """Declared scalar-variable names, independent of declaration order."""
+        return self.xml.variable_names
+
     def set_generation_date_and_time(self, dt: datetime | str | None = None) -> None:
         """Set the generation date and time on the XML document.
 

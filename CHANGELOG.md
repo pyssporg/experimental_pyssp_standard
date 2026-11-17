@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Expose `ModelDescription.variable_names`, the declared scalar-variable names
+  of an FMI 2 or FMI 3 model description.
+
 ## [0.9.3.dev0] - 2026-11-09
 
 ### Changed

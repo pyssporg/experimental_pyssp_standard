@@ -147,6 +147,11 @@ class Fmi3ModelDescriptionDocument:
     def parameters(self) -> list[Fmi3ScalarVariable]:
         return self.get(causality="parameter")
 
+    @property
+    def variable_names(self) -> frozenset[str]:
+        """Declared scalar-variable names, independent of declaration order."""
+        return frozenset(variable.name for variable in self.variables)
+
     def get_type_definitions(self, name: str | None = None, type_name: str | None = None) -> list[Fmi3TypeDefinition]:
         matches: list[Fmi3TypeDefinition] = []
         for definition in self.type_definitions:
