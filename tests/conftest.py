@@ -30,6 +30,7 @@ FILE_LEVELS = {
     "common/test_reference_discovery.py": "unit",
     "common/test_reference_specs.py": "unit",
     "common/test_runtime_layer.py": "unit",
+    "common/test_xml_schema_thread_safety.py": "unit",
     "fmi2/archive/test_fmu.py": "acceptance",
     "fmi2/archive/test_fmu_package_deterministic.py": "acceptance",
     "fmi2/codec/test_default_experiment_stepsize.py": "component",
