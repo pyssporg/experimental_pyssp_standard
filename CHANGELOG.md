@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.4.dev0] - 2026-11-20
+
 ### Added
 
+- Add `FMU.stage()` and `FMU.package()`: write a validated FMU directory tree
+  and a deterministic `.fmu` archive from a model description plus binaries,
+  sources, resources, and documentation. (`051c8c7`)
 - Expose `ModelDescription.variable_names`, the declared scalar-variable names
-  of an FMI 2 or FMI 3 model description.
+  of an FMI 2 or FMI 3 model description. (`a287171`)
+
+### Changed
+
+- Convert the build to setuptools with the version read dynamically from
+  `pyssp_standard.__version__`, and require Python >= 3.11. (`22442e2`)
 
 ## [0.9.3.dev0] - 2026-11-09
 
